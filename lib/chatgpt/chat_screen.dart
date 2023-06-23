@@ -2,7 +2,6 @@ import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import 'chatmessage.dart';
 import 'threedots.dart';
 
@@ -20,15 +19,15 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isImageSearch = false;
 
   bool _isTyping = false;
-
+/*
   @override
   void initState() {
     chatGPT = OpenAI.instance.build(
         token: dotenv.env["API_KEY"],
-        baseOption: HttpSetup(receiveTimeout: 60000));
+        baseOption: HttpSetup(receiveTimeout: 6000));
     super.initState();
   }
-
+*/
   @override
   void dispose() {
     chatGPT?.close();
@@ -59,14 +58,15 @@ class _ChatScreenState extends State<ChatScreen> {
       final response = await chatGPT!.generateImage(request);
       Vx.log(response!.data!.last!.url!);
       insertNewData(response.data!.last!.url!, isImage: true);
-    } else {
-      final request =
-          CompleteText(prompt: message.text, model: kTranslateModelV3);
-
-      final response = await chatGPT!.onCompleteText(request: request);
-      Vx.log(response!.choices[0].text);
-      insertNewData(response.choices[0].text, isImage: false);
     }
+    /*
+     else {
+   final request = CompleteText(prompt: message.text, model: kTranslateModelV3);
+
+  final response = await chatGPT!.onCompleteText(request: request);
+   Vx.log(response!.choices[0].text);
+   insertNewData(response.choices[0].text, isImage: false);
+    }*/
   }
 
   void insertNewData(String response, {bool isImage = false}) {
