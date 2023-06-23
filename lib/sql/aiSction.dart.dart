@@ -1,5 +1,3 @@
-/*
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -9,25 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'package:file_picker/file_picker.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
+
+class CameraHomeScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
+  _CameraHomeScreenState createState() => _CameraHomeScreenState();
 }
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class _CameraHomeScreenState extends State<CameraHomeScreen> {
   bool isVideoUploaded = false;
   String streamUrlButton0 = 'http://16.170.202.231:8080/babinski';
   String streamUrlButton1 = 'http://16.170.202.231:8080/grasp-reflex';
@@ -268,11 +255,8 @@ class _CameraScreenState extends State<CameraScreen> {
               },
 
             ),
-
-
           Column(
             children: [
-
               if (stringFromPython=="Negative tonic Neck reflex"||stringFromPython=="Positive tonic Neck reflex")
                 Image.asset(
                   'assets/tonicneck.jpg',
@@ -388,4 +372,3 @@ Future<void> uploadVideo(BuildContext context, File videoFile) async {
     );
   }
 }
-*/

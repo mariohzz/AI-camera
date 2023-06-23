@@ -5,7 +5,10 @@ import 'package:python_project/auth/auth.dart';
 import 'package:python_project/consts.dart';
 import 'package:python_project/mockdata.dart';
 import 'package:python_project/model/item_list.dart';
+import 'package:python_project/paint_app/home_page.dart';
 import 'package:python_project/schedule/schedule_page.dart';
+import 'package:python_project/screens/LoginScreen.dart';
+import 'package:python_project/sql/aiSction.dart.dart';
 import 'package:python_project/utils.dart';
 import 'package:python_project/widgets/day_item.dart';
 import 'package:python_project/widgets/title_widgets.dart';
@@ -13,20 +16,33 @@ import 'package:python_project/widgets/title_widgets.dart';
 class MyListPage extends StatelessWidget {
   final username = 'jamescardona11';
 
-   MyListPage({super.key});
-  final User? user =Auth().currentuser;
+  MyListPage({super.key});
+  final User? user = Auth().currentuser;
   Future<void> singout() async {
     await Auth().signOut();
   }
-   Widget _title()  {
-     return const Text("FirebaseAuth");
+
+  Widget _title() {
+    return const Text("FirebaseAuth");
   }
-   Widget _UserUid()  {
-     return  Text(user?.email ?? 'User Email');
+
+  Widget _UserUid() {
+    return Text(user?.email ?? 'User Email');
   }
-    Widget _singOutButton()  {
-     return  Container(margin: EdgeInsets.only(right: 320,),child: TextButton(onPressed: singout, child: const Text('sing out',style: TextStyle(color: Color.fromARGB(255, 236, 104, 52)),)));
+
+  Widget _singOutButton() {
+    return Container(
+        margin: EdgeInsets.only(
+          right: 320,
+        ),
+        child: TextButton(
+            onPressed: singout,
+            child: const Text(
+              'sing out',
+              style: TextStyle(color: Color.fromARGB(255, 236, 104, 52)),
+            )));
   }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -42,7 +58,6 @@ class MyListPage extends StatelessWidget {
             ),
             _singOutButton(),
             TitleWidget(title: 'My List'),
-            
             _DatePicker(),
             Expanded(child: _BottomContainer()),
           ],
@@ -96,12 +111,11 @@ class _DatePicker extends StatefulWidget {
   @override
   __DatePickerState createState() => __DatePickerState();
 }
+
 class __DatePickerState extends State<_DatePicker> {
   final selectedItem = ValueNotifier<int>(3);
   @override
-
   Widget build(BuildContext context) {
-    
     final days = daysInMonth();
     final size = MediaQuery.of(context).size;
     return Container(
@@ -135,22 +149,190 @@ class __DatePickerState extends State<_DatePicker> {
 class _BottomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    void navigateToScreen(BuildContext context, String screenIdentifier) {
+      switch (screenIdentifier) {
+        case 'screen1':
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CameraHomeScreen()),
+          );
+          break;
+        case 'screen2':
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PaintPage()),
+          );
+          break;
+      }
+    }
+
     final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
       height: size.height,
-      child: GridView.count( 
-        padding: const EdgeInsets.all(16),
-        physics: const BouncingScrollPhysics(),
-        childAspectRatio: 0.8,
-        crossAxisCount: 2,
-        
-        children: MockData.itemList
+      child: GridView.count(
+          padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+          physics: NeverScrollableScrollPhysics(),
+          childAspectRatio: 0.9,
+          crossAxisCount: 2,
+          mainAxisSpacing: 6,
+          crossAxisSpacing: 17,
+          children: [
+            /*
+         MockData.itemList
             .map(
               (item) => _MyListItem(itemList: item),
             )
-            .toList(),
-      ),
+            .toList(),*/
+            GestureDetector(
+                onTap: () {
+                  navigateToScreen(
+                      context, 'screen1'); // Pass the identifier for screen 1
+                },
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text('Tests',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        Image.asset(
+                          width: 140,
+                          'images/Lovepik.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ]),
+                  decoration: BoxDecoration(
+                    color: Colors
+                        .white, // Set the background color of the container
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Set the border radius of the container
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(
+                            0.5), // Set the color and opacity of the shadow
+                        spreadRadius: 2, // Set the spread radius of the shadow
+                        blurRadius: 5, // Set the blur radius of the shadow
+                        offset: Offset(0, 3), // Set the offset of the shadow
+                      ),
+                    ],
+                  ),
+                )),
+ GestureDetector(
+                onTap: () {
+                  navigateToScreen(
+                      context, 'screen2'); // Pass the identifier for screen 1
+                },
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text('Art',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        Image.asset(
+                          width: 140,
+                          'images/vector-color-paint.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ]),
+                  decoration: BoxDecoration(
+                    color: Colors
+                        .white, // Set the background color of the container
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Set the border radius of the container
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(
+                            0.5), // Set the color and opacity of the shadow
+                        spreadRadius: 2, // Set the spread radius of the shadow
+                        blurRadius: 5, // Set the blur radius of the shadow
+                        offset: Offset(0, 3), // Set the offset of the shadow
+                      ),
+                    ],
+                  ),
+                )),
+ GestureDetector(
+                onTap: () {
+                  navigateToScreen(
+                      context, 'screen1'); // Pass the identifier for screen 1
+                },
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 7),
+                          child: Text('heart measur',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        Image.asset(
+                          width: 150,
+                          'images/Heart_human.jpg',
+                          fit: BoxFit.fill,
+                        ),
+                      ]),
+                  decoration: BoxDecoration(
+                    color: Colors
+                        .white, // Set the background color of the container
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Set the border radius of the container
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(
+                            0.5), // Set the color and opacity of the shadow
+                        spreadRadius: 2, // Set the spread radius of the shadow
+                        blurRadius: 5, // Set the blur radius of the shadow
+                        offset: Offset(0, 3), // Set the offset of the shadow
+                      ),
+                    ],
+                  ),
+                )),
+ GestureDetector(
+                onTap: () {
+                  navigateToScreen(
+                      context, 'screen1'); // Pass the identifier for screen 1
+                },
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text('DR.ChatGPT',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        Image.asset(
+                          width: 140,
+                          'images/chatg.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ]),
+                  decoration: BoxDecoration(
+                    color: Colors
+                        .white, // Set the background color of the container
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Set the border radius of the container
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(
+                            0.5), // Set the color and opacity of the shadow
+                        spreadRadius: 2, // Set the spread radius of the shadow
+                        blurRadius: 5, // Set the blur radius of the shadow
+                        offset: Offset(0, 3), // Set the offset of the shadow
+                      ),
+                    ],
+                  ),
+                )),
+          ]),
     );
   }
 }
@@ -165,8 +347,6 @@ class _MyListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return InkWell(
       child: Container(
         margin: const EdgeInsets.all(8.0),
