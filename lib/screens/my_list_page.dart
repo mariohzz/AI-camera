@@ -2,9 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/animation/scale_transition.dart';
 import 'package:python_project/auth/auth.dart';
-import 'package:python_project/chatgpt/chat/ui/chat_body.dart';
-import 'package:python_project/chatgpt/chat_screen.dart';
-import 'package:python_project/chatgpt/chatgpt.dart';
+import 'package:python_project/chatgpt/api/chat_api.dart';
+import 'package:python_project/chatgpt/chat_page.dart';
 import 'package:python_project/consts.dart';
 import 'package:python_project/mockdata.dart';
 import 'package:python_project/model/item_list.dart';
@@ -169,7 +168,7 @@ class _BottomContainer extends StatelessWidget {
         case 'screen3':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatPage()),
+            MaterialPageRoute(builder: (context) =>  ChatApp(chatApi: ChatApi())),
           );
           break;
       }
@@ -450,6 +449,26 @@ class _ChipTask extends StatelessWidget {
         style:
             TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
+    );
+  }
+}
+
+class ChatApp extends StatelessWidget {
+  const ChatApp({required this.chatApi, super.key});
+
+  final ChatApi chatApi;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ChatGPT Client',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          secondary: Colors.lime,
+        ),
+      ),
+      home: ChatPage(chatApi: chatApi),
     );
   }
 }
