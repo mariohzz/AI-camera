@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/animation/scale_transition.dart';
 import 'package:python_project/auth/auth.dart';
+import 'package:python_project/chatgpt/chat_screen.dart';
 import 'package:python_project/consts.dart';
 import 'package:python_project/mockdata.dart';
 import 'package:python_project/model/item_list.dart';
@@ -160,7 +161,13 @@ class _BottomContainer extends StatelessWidget {
         case 'screen2':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PaintPage()),
+            MaterialPageRoute(builder: (context) => const PaintPage()),
+          );
+          break;
+        case 'screen3':
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatScreen()),
           );
           break;
       }
@@ -221,7 +228,7 @@ class _BottomContainer extends StatelessWidget {
                     ],
                   ),
                 )),
- GestureDetector(
+            GestureDetector(
                 onTap: () {
                   navigateToScreen(
                       context, 'screen2'); // Pass the identifier for screen 1
@@ -258,7 +265,7 @@ class _BottomContainer extends StatelessWidget {
                     ],
                   ),
                 )),
- GestureDetector(
+            GestureDetector(
                 onTap: () {
                   navigateToScreen(
                       context, 'screen1'); // Pass the identifier for screen 1
@@ -295,10 +302,10 @@ class _BottomContainer extends StatelessWidget {
                     ],
                   ),
                 )),
- GestureDetector(
+            GestureDetector(
                 onTap: () {
                   navigateToScreen(
-                      context, 'screen1'); // Pass the identifier for screen 1
+                      context, 'screen3'); // Pass the identifier for screen 1
                 },
                 child: Container(
                   child: Column(
