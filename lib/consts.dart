@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 const length = 3;
 
 const topSize = 95.0;
@@ -39,7 +38,7 @@ const greenHighlight = Color(0xff26DF29);
 const instructions = "Place your index finger tightly on camera.";
 const processText = "Analyzing...";
 const warning = "Warning: finger not placed correctly";
-
+/*
 TextStyle appText(
     {required Color color,
     double? size,
@@ -60,3 +59,4 @@ TextStyle appText(
         : [],
   );
 }
+*/
