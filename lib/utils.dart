@@ -36,3 +36,27 @@ String dayName(int day) {
 
   return 'Mon';
 }
+/*
+  velocity_x: ^3.6.0    
+  flutter_mjpeg: ^2.0.3
+  video_player: ^2.6.1
+  sqflite: ^2.2.8+4
+  firebase_core: ^2.14.0
+  firebase_auth: ^4.6.3
+  chat_gpt_sdk: ^1.0.2
+  path_provider: ^2.0.15
+  http: ^0.13.4
+  web_socket_channel: ^2.4.0
+  eventsource: ^0.4.0
+  file_picker: ^5.3.2
+  firebase_storage: ^11.2.3
+  dart_openai: ^3.0.0
+  fluttertoast: ^8.2.2
+  flutter_colorpicker: ^1.0.3
+  breathing_collection: ^1.0.0+3
+  font_awesome_flutter: ^10.1.0
+  flutter_camera: ^0.1.1
+  image: ^3.2.0
+  lottie: ^1.3.0
+  flutter_dotenv: ^5.0.2
+  */

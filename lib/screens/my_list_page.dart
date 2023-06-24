@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/animation/scale_transition.dart';
 import 'package:python_project/auth/auth.dart';
+import 'package:python_project/chatgpt/chat/ui/chat_body.dart';
 import 'package:python_project/chatgpt/chat_screen.dart';
+import 'package:python_project/chatgpt/chatgpt.dart';
 import 'package:python_project/consts.dart';
 import 'package:python_project/mockdata.dart';
 import 'package:python_project/model/item_list.dart';
@@ -167,7 +169,7 @@ class _BottomContainer extends StatelessWidget {
         case 'screen3':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatScreen()),
+            MaterialPageRoute(builder: (context) => const ChatPage()),
           );
           break;
       }

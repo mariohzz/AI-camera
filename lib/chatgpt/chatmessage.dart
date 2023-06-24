@@ -27,6 +27,8 @@ class ChatMessage extends StatelessWidget {
             .rounded
             .alignCenter
             .makeCentered(),
+            //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
+
         Expanded(
           child: isImage
               ? AspectRatio(
