@@ -4,14 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:python_project/auth/auth.dart';
 import 'package:python_project/screens/SignupScreen.dart';
 
+import '../navigation.dart';
+import '../userCreate.dart';
+import '../widgets/logo.dart';
+
 class LoginScreen extends StatefulWidget {
+  late final UserDatabase userDatabase;
+  LoginScreen(this.userDatabase);
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState(userDatabase);
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late final UserDatabase userDatabase;
   late FocusNode myFocusNode;
-
+  _LoginScreenState(this.userDatabase);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _email;
   late String _password;
@@ -22,6 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await Auth().signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
+      // Navigate to the Material3BottomNav page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Material3BottomNav(userDatabase,0)),
+      );
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -70,228 +82,143 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height * 0.35,
-            width: MediaQuery.of(context).size.width,
-            child: Stack(
-              children: <Widget>[
-                ClipPath(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.deepPurple[300],
-                  ),
-                  clipper: RoundedClipper(60),
-                ),
-                ClipPath(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.33,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  clipper: RoundedClipper(50),
-                ),
-                Positioned(
-                    top: -110,
-                    left: -110,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.30,
-                      width: MediaQuery.of(context).size.height * 0.30,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              (MediaQuery.of(context).size.height * 0.30) / 2),
-                          color: Colors.deepPurple[300]!.withOpacity(0.3)),
-                      child: Center(
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.deepPurpleAccent),
-                        ),
-                      ),
-                    )),
-                Positioned(
-                    top: -100,
-                    left: 100,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.36,
-                      width: MediaQuery.of(context).size.height * 0.36,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              (MediaQuery.of(context).size.height * 0.36) / 2),
-                          color: Colors.deepPurple[300]!.withOpacity(0.3)),
-                      child: Center(
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.deepPurpleAccent),
-                        ),
-                      ),
-                    )),
-                Positioned(
-                    top: -50,
-                    left: 60,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      width: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              (MediaQuery.of(context).size.height * 0.15) / 2),
-                          color: Colors.deepPurple[300]!.withOpacity(0.3)),
-                    )),
+      backgroundColor: Colors.yellow,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Stack(
+              children: [
                 Container(
-                  margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.15 - 50),
-                  height: MediaQuery.of(context).size.height * 0.33,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: <Widget>[
-                      Image.asset(
-                        "images/login.png",
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        width: MediaQuery.of(context).size.height * 0.15,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Welcome",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      )
-                    ],
+                  width: 250,
+                  height: 250,
+                  child: Image.asset(
+                    'images/baby1.png',
+                    fit: BoxFit.cover,
                   ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 90,
+                  right: 0,
+                  child: AnimatedText("Baby Care"),
                 ),
               ],
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.65,
-            width: MediaQuery.of(context).size.width,
-            child: Container(
-              margin: EdgeInsets.fromLTRB(20, 12, 20, 10),
-              child: Form(
-                key: _formKey,
-                // autovalidateMode: _autoValidate,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      onSaved: (val) {
-                        _controllerEmail.text = val!;
-                      },
-                      controller: _controllerEmail,
-                      keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        contentPadding:  EdgeInsets.symmetric(
-                            vertical:
-                                MediaQuery.of(context).size.height * 0.022,
-                            horizontal: 15.0),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.65,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                margin: EdgeInsets.fromLTRB(20, 12, 20, 10),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        onSaved: (val) {
+                          _controllerEmail.text = val!;
+                        },
+                        controller: _controllerEmail,
+                        keyboardType: TextInputType.emailAddress,
+                        style: const TextStyle(fontSize: 16, color: Colors.black),
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.height * 0.022,
+                            horizontal: 15.0,
+                          ),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                          ),
+                        ),
+                        onFieldSubmitted: (String value) {
+                          FocusScope.of(context).requestFocus(myFocusNode);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        onSaved: (val) {
+                          _controllerPassword.text = val!;
+                        },
+                        controller: _controllerPassword,
+                        focusNode: myFocusNode,
+                        obscureText: true,
+                        keyboardType: TextInputType.text,
+                        style: const TextStyle(fontSize: 16, color: Colors.black),
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.height * 0.022,
+                            horizontal: 15.0,
+                          ),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                          ),
                         ),
                       ),
-                      onFieldSubmitted: (String value) {
-                        FocusScope.of(context).requestFocus(myFocusNode);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      onSaved: (val) {
-                        _controllerPassword.text = val!;
-                      },
-                  //    validator: validatePassword(_controllerPassword.toString()),
-                      controller: _controllerPassword,
-                      focusNode: myFocusNode,
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                      textInputAction: TextInputAction.done,
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        contentPadding:  EdgeInsets.symmetric(
-                            vertical:
-                                MediaQuery.of(context).size.height * 0.022,
-                            horizontal: 15.0),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(25)),
-                        ),
+                      const SizedBox(
+                        height: 7,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: Row(
-                        children:const <Widget>[
-                          /*
+                      Container(
+                        margin: const EdgeInsets.only(left: 20),
+                        child: Row(
+                          children: const <Widget>[
+                            /*
                           Checkbox(
                             activeColor: Colors.deepPurpleAccent,
                             value: _value1,
-                           // onChanged: _value1Changed,
+                            // onChanged: _value1Changed,
                           ),
                           */
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    Container(
-                      child: GestureDetector(
-                          onTap: () {
+                      SizedBox(
+                        height: 7,
+                      ),
+                      Container(
+                        child: ElevatedButton(
+                          onPressed: () {
                             signWithEmailAndPassword();
                             _entryField('email', _controllerEmail);
                             _entryField('Password', _controllerPassword);
-                          //  _logOrReg();
+                            // _logOrReg();
                           },
                           child: Container(
-                            height: MediaQuery.of(context).size.height * 0.065,
-                            decoration: const BoxDecoration(
-                                color: Colors.deepPurpleAccent,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(25))),
                             child: const Center(
                               child: Text(
                                 "SIGN IN",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
+                                style: TextStyle(color: Colors.white, fontSize: 16),
                               ),
                             ),
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    _errorMessage(),
-                    Container(
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      _errorMessage(),
+                      Container(
                         margin: EdgeInsets.only(top: 10, bottom: 15),
                         height: MediaQuery.of(context).size.height * 0.05,
                         child: GestureDetector(
                           onTap: () {
                             print("signup");
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignupScreen()));
+                              context,
+                              MaterialPageRoute(builder: (context) => SignupScreen(userDatabase)),
+                            );
                           },
                           child: Center(
                             child: Row(
@@ -300,9 +227,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Text(
                                   "New User?",
                                   style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16),
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
                                 ),
                                 SizedBox(
                                   width: 5,
@@ -310,23 +238,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Text(
                                   "Signup",
                                   style: TextStyle(
-                                      color: Colors.deepPurpleAccent,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16),
+                                    color: Colors.deepPurpleAccent,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        ))
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
+
 
   bool _value1 = false;
   bool _autoValidate = false;

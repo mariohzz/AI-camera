@@ -7,92 +7,342 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../displayvideo.dart';
+import '../upload.dart';
+import '../userCreate.dart';
+import '../widgets/logo.dart';
+
 
 
 class CameraHomeScreen extends StatefulWidget {
+  final UserDatabase userDatabase;
+  CameraHomeScreen(this.userDatabase);
+
   @override
   _CameraHomeScreenState createState() => _CameraHomeScreenState();
 }
 
 class _CameraHomeScreenState extends State<CameraHomeScreen> {
-  bool isVideoUploaded = false;
-  String streamUrlButton0 = 'http://16.170.202.231:8080/babinski';
-  String streamUrlButton1 = 'http://16.170.202.231:8080/grasp-reflex';
-  String streamUrlButton2 = 'http://16.170.202.231:8080/RootingReflex';
-  String streamUrlButton3 = 'http://16.170.202.231:8080/tonicNeck';
-
-  void uploadVideoAndUpdateUI(BuildContext context) async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.video,
-    );
-    if (result != null) {
-      final videoPath = result.files.single.path;
-      if (videoPath != null) {
-        final videoFile = File(videoPath);
-        await uploadVideo(context, videoFile);
-        setState(() {
-          isVideoUploaded = true;
-        });
-      }
+  final String tit = 'Upload File';
+  final String sub = 'Browse and chose the video you want to upload.';
+  //screen navigation
+  void navigateToScreen(BuildContext context, String screenIdentifier) {
+    switch (screenIdentifier) {
+      case 'babnski':
+    Navigator.push(
+                context,
+                 MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton0)),
+              );
+        break;
+      case 'grasp':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton1)),
+        );
+        break;
+      case 'rooting':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton2)),
+        );
+        break;
+      case 'tonic':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton3)),
+        );
+        break;
     }
   }
 
+
+
+
+  bool isVideoUploaded = false;
+  String streamUrlButton0 = 'http://192.168.35.117:8080/babinski';
+  String streamUrlButton1 = 'http://192.168.35.117:8080/grasp-reflex';
+  String streamUrlButton2 = 'http://192.168.35.117:8080/RootingReflex';
+  String streamUrlButton3 = 'http://192.168.35.117:8080/tonicNeck';
+
   @override
   Widget build(BuildContext context) {
+    int _selectedIndex = 0;
+    bool showAppBar = true; // Set this value based on your conditions
+    final size = MediaQuery.of(context).size;
+    final PageController _pageController = PageController();
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
+      backgroundColor: Colors.white, // Set the desired background color here
+      appBar: showAppBar ? AppBar(title: const Text(
+        'Test Page',
+        style: TextStyle(
+            fontSize: 30.0,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            decoration: TextDecoration.none),
       ),
-      body: Center(
+      centerTitle: true,
+        backgroundColor: Colors.cyan,
+      ) : null,
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (!isVideoUploaded)
-              ElevatedButton(
-                child: Text('Choose Video'),
-                onPressed: () => uploadVideoAndUpdateUI(context),
+            SizedBox(height: 220),
+            Container(
+              width: size.width,
+              child: GridView.count(
+                padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                physics: NeverScrollableScrollPhysics(),
+                childAspectRatio: 0.9,
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 17,
+                shrinkWrap: true,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      navigateToScreen(context, 'babnski');
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              'Babnski',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Image.asset(
+                            'images/babnski.jpg',
+                            width: 140,
+                            fit: BoxFit.fill,
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      navigateToScreen(context, 'tonic');
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              'TonicNeck',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Image.asset(
+                            'images/tonic.jpg',
+                            width: 100,
+                            fit: BoxFit.fill,
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      navigateToScreen(context, 'grasp');
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              'Grasp',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Image.asset(
+                            'images/grasp.jpg',
+                            width: 140,
+                            fit: BoxFit.fill,
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      navigateToScreen(context, 'rooting');
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              'Rooting',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Image.asset(
+                            'images/rooting.jpg',
+                            width: 110,
+                            fit: BoxFit.fill,
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              child: Text('Babinski Test'),
-              onPressed: isVideoUploaded
-                  ? () {
-                navigateToCameraScreen(context, streamUrlButton0);
-              }
-                  : null,
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              child: Text('Grasp Test'),
-              onPressed: isVideoUploaded
-                  ? () {
-                navigateToCameraScreen(context, streamUrlButton1);
-              }
-                  : null,
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              child: Text('Rooting Test'),
-              onPressed: isVideoUploaded
-                  ? () {
-                navigateToCameraScreen(context, streamUrlButton2);
-              }
-                  : null,
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              child: Text('Tonic Neck Test'),
-              onPressed: isVideoUploaded
-                  ? () {
-                navigateToCameraScreen(context, streamUrlButton3);
-              }
-                  : null,
             ),
           ],
         ),
       ),
     );
   }
+
+// body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       ElevatedButton(
+      //         child: Text('Babinski Test'),
+      //         onPressed:  () {
+      //
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => VideoPlayerScreen(streamUrlButton0)),
+      //           );
+      //           //navigateToCameraScreen(context, streamUrlButton0);
+      //         },
+      //       ),
+      //       SizedBox(height: 16),
+      //       ElevatedButton(
+      //         child: Text('Grasp Test'),
+      //         onPressed:
+      //             () {
+      //               Navigator.push(
+      //                 context,
+      //                 MaterialPageRoute(builder: (context) => VideoPlayerScreen(streamUrlButton1)),
+      //               );
+      //           //navigateToCameraScreen(context, streamUrlButton1);
+      //         }
+      //             ,
+      //       ),
+      //       SizedBox(height: 16),
+      //       ElevatedButton(
+      //         child: Text('Rooting Test'),
+      //         onPressed:() {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => VideoPlayerScreen(streamUrlButton2)),
+      //           );
+      //           //navigateToCameraScreen(context, streamUrlButton2);
+      //         }
+      //             ,
+      //       ),
+      //       SizedBox(height: 16),
+      //       ElevatedButton(
+      //         child: Text('Tonic Neck Test'),
+      //         onPressed: () {
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(builder: (context) => VideoPlayerScreen(streamUrlButton3)),
+      //           );
+      //           //navigateToCameraScreen(context, streamUrlButton3);
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
+
+    static const _navBarItems = [
+    NavigationDestination(
+      icon: Icon(Icons.home_outlined),
+      selectedIcon: Icon(Icons.home_rounded),
+      label: 'Home',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.bookmark_border_outlined),
+      selectedIcon: Icon(Icons.bookmark_rounded),
+      label: 'Tests',
+    ),
+    // NavigationDestination(
+    //   icon: Icon(Icons.shopping_bag_outlined),
+    //   selectedIcon: Icon(Icons.shopping_bag),
+    //   label: 'Cart',
+    // ),
+    NavigationDestination(
+      icon: Icon(Icons.person_outline_rounded),
+      selectedIcon: Icon(Icons.person_rounded),
+      label: 'Profile',
+    ),
+  ];
   Future<bool?> showUploadConfirmationDialog(BuildContext context) async {
     return showDialog<bool>(
       context: context,
@@ -128,8 +378,6 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
         context,
         MaterialPageRoute(builder: (context) => CameraScreen(streamUrl: streamUrl)),
       );
-    } else {
-      uploadVideoAndUpdateUI(context);
     }
   }
 
@@ -197,12 +445,6 @@ class _CameraScreenState extends State<CameraScreen> {
   String extractTestName(String url) {
     final parts = url.split('/');
     return parts.last;
-  }
-  bool isStreamingEnded = false;
-  void onStreamingEnd() {
-    setState(() {
-      isStreamingEnded = true;
-    });
   }
 
    String Result = 'Result';
@@ -297,78 +539,6 @@ class _CameraScreenState extends State<CameraScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-Future<void> uploadVideo(BuildContext context, File videoFile) async {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Processing the Video...'),
-        content: LinearProgressIndicator(),
-      );
-    },
-  );
-
-  final url = Uri.parse('http://16.170.202.231:8080/upload');
-  final request = http.MultipartRequest('POST', url);
-
-  request.headers['Content-Type'] = 'multipart/form-data';
-
-  final videoStream = http.ByteStream(Stream.castFrom(videoFile.openRead()));
-  final videoLength = await videoFile.length();
-
-  final videoMultipartFile = http.MultipartFile(
-    'video',
-    videoStream,
-    videoLength,
-    filename: videoFile.path.split('/').last,
-    contentType: MediaType('video', 'mp4'),
-  );
-
-  request.files.add(videoMultipartFile);
-
-  final response = await http.Response.fromStream(await request.send());
-  if (response.statusCode == 200) {
-    Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Video Uploaded Successfully'),
-          content: Text('The video has been uploaded successfully.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  } else {
-    Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Failed to Upload Video'),
-          content: Text('Failed to upload the video. Please try again.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

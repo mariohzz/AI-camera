@@ -1,8 +1,8 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/animation/scale_transition.dart';
 import 'package:python_project/auth/auth.dart';
-import 'package:python_project/chatgpt/chat_screen.dart';
 import 'package:python_project/consts.dart';
 import 'package:python_project/mockdata.dart';
 import 'package:python_project/model/item_list.dart';
@@ -14,35 +14,45 @@ import 'package:python_project/utils.dart';
 import 'package:python_project/widgets/day_item.dart';
 import 'package:python_project/widgets/title_widgets.dart';
 
+import '../chatgpt/api/chat_api.dart';
+import '../chatgpt/chat_page.dart';
+import '../navigation.dart';
+import '../photoUpload.dart';
+import '../upload.dart';
+import '../userCreate.dart';
+
+late final UserDatabase userDatabase;
 class MyListPage extends StatelessWidget {
   final username = 'jamescardona11';
-
-  MyListPage({super.key});
-  final User? user = Auth().currentuser;
-  Future<void> singout() async {
-    await Auth().signOut();
-  }
-
-  Widget _title() {
-    return const Text("FirebaseAuth");
-  }
-
-  Widget _UserUid() {
-    return Text(user?.email ?? 'User Email');
-  }
-
-  Widget _singOutButton() {
-    return Container(
-        margin: EdgeInsets.only(
-          right: 320,
-        ),
-        child: TextButton(
-            onPressed: singout,
-            child: const Text(
-              'sing out',
-              style: TextStyle(color: Color.fromARGB(255, 236, 104, 52)),
-            )));
-  }
+  MyListPage(userDatabase);
+  // final User? user = Auth().currentuser;
+  // Future<void> singout(BuildContext context) async {
+  //   await Auth().signOut();
+  //   Navigator.push(context,MaterialPageRoute(builder: (context)=>LoginScreen()));
+  // }
+  //
+  // Widget _title() {
+  //   return const Text("FirebaseAuth");
+  // }
+  //
+  // Widget _UserUid() {
+  //   return Text(user?.email ?? 'User Email');
+  // }
+  //
+  // Widget _singOutButton(BuildContext context) {
+  //   return Container(
+  //       margin: EdgeInsets.only(
+  //         right: 320,
+  //       ),
+  //       child: TextButton(
+  //           onPressed:() {
+  //             singout(context);
+  //           },
+  //           child: const Text(
+  //             'sing out',
+  //             style: TextStyle(color: Color.fromARGB(255, 236, 104, 52)),
+  //           )));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,20 +62,31 @@ class MyListPage extends StatelessWidget {
         width: size.width,
         height: size.height,
         color: Colors.white,
+    //       child: Padding(
+    //         padding: EdgeInsets.all(8.0),
+    //         child:Center(
+    //            child: Expanded(child: _BottomContainer()),
+    // )
+
         child: Column(
           children: [
-            _CustomAppBar(
-              username: username,
-            ),
-            _singOutButton(),
-            TitleWidget(title: 'My List'),
-            _DatePicker(),
+             _CustomAppBar(
+               username: username,
+
+             ),
+            //const Material3BottomNav(),
+            //TitleWidget(title: 'My List'),
+            //DatePicker(),
+            // Center(
+            //   child: CircularPhotoUploader(),
+            // ),
             Expanded(child: _BottomContainer()),
           ],
         ),
-      ),
+
+      // ),
       // floatingActionButton: FloatingAddButtonPage(),
-    );
+    ));
   }
 }
 
@@ -94,11 +115,6 @@ class _CustomAppBar extends StatelessWidget {
                   style: kStyleName.copyWith(fontSize: 26),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  // ignore: avoid_escaping_inner_quotes
-                  'Let\'s make this day productive',
-                  style: kGreyStyle.copyWith(fontSize: 14),
-                ),
               ],
             ),
           ],
@@ -148,14 +164,19 @@ class __DatePickerState extends State<_DatePicker> {
 }
 
 class _BottomContainer extends StatelessWidget {
+  final String tit = 'Upload File';
+  final String sub = 'Browse and chose the video you want to upload.';
   @override
   Widget build(BuildContext context) {
+    ////////////////////////////////////////////
+    //screen navigation
     void navigateToScreen(BuildContext context, String screenIdentifier) {
       switch (screenIdentifier) {
+
         case 'screen1':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CameraHomeScreen()),
+            MaterialPageRoute(builder: (context) => CameraHomeScreen(userDatabase)),
           );
           break;
         case 'screen2':
@@ -167,11 +188,13 @@ class _BottomContainer extends StatelessWidget {
         case 'screen3':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatScreen()),
+            MaterialPageRoute(builder: (context) =>  ChatApp(chatApi: ChatApi())),
           );
           break;
+
       }
     }
+    /////////////////////////////////////////////////////////////////////////
 
     final size = MediaQuery.of(context).size;
     return Container(
@@ -182,57 +205,18 @@ class _BottomContainer extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           childAspectRatio: 0.9,
           crossAxisCount: 2,
-          mainAxisSpacing: 6,
+          mainAxisSpacing: 3,
           crossAxisSpacing: 17,
           children: [
-            /*
-         MockData.itemList
-            .map(
-              (item) => _MyListItem(itemList: item),
-            )
-            .toList(),*/
-            GestureDetector(
-                onTap: () {
-                  navigateToScreen(
-                      context, 'screen1'); // Pass the identifier for screen 1
-                },
-                child: Container(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text('Tests',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                        ),
-                        Image.asset(
-                          width: 140,
-                          'images/Lovepik.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ]),
-                  decoration: BoxDecoration(
-                    color: Colors
-                        .white, // Set the background color of the container
-                    borderRadius: BorderRadius.circular(
-                        8.0), // Set the border radius of the container
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(
-                            0.5), // Set the color and opacity of the shadow
-                        spreadRadius: 2, // Set the spread radius of the shadow
-                        blurRadius: 5, // Set the blur radius of the shadow
-                        offset: Offset(0, 3), // Set the offset of the shadow
-                      ),
-                    ],
-                  ),
-                )),
+            SizedBox(),
+            SizedBox(),
+
             GestureDetector(
                 onTap: () {
                   navigateToScreen(
                       context, 'screen2'); // Pass the identifier for screen 1
                 },
+
                 child: Container(
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -268,7 +252,7 @@ class _BottomContainer extends StatelessWidget {
             GestureDetector(
                 onTap: () {
                   navigateToScreen(
-                      context, 'screen1'); // Pass the identifier for screen 1
+                      context, 'screen4'); // Pass the identifier for screen 1
                 },
                 child: Container(
                   child: Column(
@@ -276,13 +260,13 @@ class _BottomContainer extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 7),
-                          child: Text('heart measur',
+                          child: Text('Location',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold)),
                         ),
                         Image.asset(
-                          width: 150,
-                          'images/Heart_human.jpg',
+                          width: 100,
+                          'images/maps.png',
                           fit: BoxFit.fill,
                         ),
                       ]),
@@ -448,6 +432,25 @@ class _ChipTask extends StatelessWidget {
         style:
             TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
       ),
+    );
+  }
+}
+class ChatApp extends StatelessWidget {
+  const ChatApp({required this.chatApi, super.key});
+
+  final ChatApi chatApi;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ChatGPT Client',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.teal,
+          secondary: Colors.lime,
+        ),
+      ),
+      home: ChatPage(chatApi: chatApi),
     );
   }
 }

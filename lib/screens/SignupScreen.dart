@@ -2,27 +2,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/auth/auth.dart';
 
+import '../userCreate.dart';
+
 class SignupScreen extends StatefulWidget {
+  late final UserDatabase userDatabase;
+  SignupScreen(this.userDatabase);
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  _SignupScreenState createState() => _SignupScreenState(this.userDatabase);
 }
 
 class _SignupScreenState extends State<SignupScreen> {
   late FocusNode focusNode1;
   late FocusNode focusNode2;
   late FocusNode focusNode3;
+  final UserDatabase userDatabase;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _email;
   late String _password;
     final TextEditingController _controllerEmail =TextEditingController();
   final TextEditingController _controllerPassword =TextEditingController();
 
-  Future<void> createUserWithEmailAndPassword() async{
+  _SignupScreenState(this.userDatabase);
+
+  Future<void> createUserWithEmailAndPassword() async {
     try {
       await Auth().createUserWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text);
-    } on FirebaseAuthException catch(e){
+      await userDatabase.createUser(_controllerEmail.text, _controllerPassword.text);
+      print('User created successfully!');
+    } on FirebaseAuthException catch (e) {
       setState(() {
-        errorMessage=e.message;
+        errorMessage = e.message;
       });
     }
   }
