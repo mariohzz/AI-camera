@@ -209,6 +209,7 @@ class ProfilePageInfo extends StatefulWidget {
 class _ProfilePageInfoState extends State<ProfilePageInfo> {
   User? _currentUser;
   List<DocumentSnapshot> _results = [];
+  List<DocumentSnapshot> _testResults = [];
 
   @override
   void initState() {
@@ -226,9 +227,15 @@ class _ProfilePageInfoState extends State<ProfilePageInfo> {
           .collection('results')
           .get();
 
+      QuerySnapshot testSnapshot = await widget.userDatabase.get_userCollection
+          .doc(userId)
+          .collection('test')
+          .get();
+
       setState(() {
         _currentUser = widget.userAuth.currentuser;
         _results = resultSnapshot.docs;
+        this._testResults = testSnapshot.docs;
       });
     }
   }

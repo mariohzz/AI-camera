@@ -43,6 +43,75 @@ class UserDatabase {
       print('Error creating user: $e');
     }
   }
+  Future<Map<String, String>> getUser() async {
+    String? userId = userAuth.getCurrentUserId();
+    try {
+      DocumentSnapshot snapshot = await _usersCollection.doc(userId).get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        // Access the fields of the user
+        String city = data['city'];
+        String clinic = data['clinic'];
+        String name = data['name'];
+        // Return the city, clinic, and name as a map
+        return {
+          'city': city,
+          'clinic': clinic,
+          'name': name,
+        };
+      } else {
+        print('User not found!');
+        return {};
+      }
+    } catch (e) {
+      print('Error retrieving user: $e');
+      return {};
+    }
+  }
+
+  Future<String> getUserName() async {
+    String? userId = userAuth.getCurrentUserId();
+    try {
+      DocumentSnapshot snapshot = await _usersCollection.doc(userId).get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        // Access the name field of the user
+        String name = data['name'];
+        return name;
+      } else {
+        print('User not found!');
+        return '';
+      }
+    } catch (e) {
+      print('Error retrieving user: $e');
+      return '';
+    }
+  }
+
+  Future<Map<String, String>> getUserById() async {
+    String? userId = userAuth.getCurrentUserId();
+    try {
+      DocumentSnapshot snapshot = await _usersCollection.doc(userId).get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        // Access the fields of the user
+        String city = data['city'];
+        String clinic = data['clinic'];
+
+        // Return the city name and clinic name as a map
+        return {
+          'city': city,
+          'clinic': clinic,
+        };
+      } else {
+        print('User not found!');
+        return {};
+      }
+    } catch (e) {
+      print('Error retrieving user: $e');
+      return {};
+    }
+  }
 
   Future<String> uploadPhoto(File? photoFile) async {
     try {
@@ -68,6 +137,65 @@ class UserDatabase {
     } catch (e) {
       print('Error uploading photo: $e');
       return '';
+    }
+  }
+  Future<void> updateEmail(String newEmail) async {
+    try {
+      String? userId = userAuth.getCurrentUserId();
+      await _usersCollection.doc(userId).update({
+        'email': newEmail,
+      });
+      print('Email updated successfully!');
+    } catch (e) {
+      print('Error updating email: $e');
+    }
+  }
+
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      String? userId = userAuth.getCurrentUserId();
+      await _usersCollection.doc(userId).update({
+        'password': newPassword,
+      });
+      print('Password updated successfully!');
+    } catch (e) {
+      print('Error updating password: $e');
+    }
+  }
+
+  Future<void> updateName(String newName) async {
+    try {
+      String? userId = userAuth.getCurrentUserId();
+      await _usersCollection.doc(userId).update({
+        'name': newName,
+      });
+      print('Name updated successfully!');
+    } catch (e) {
+      print('Error updating name: $e');
+    }
+  }
+
+  Future<void> updateCity(String newCity) async {
+    try {
+      String? userId = userAuth.getCurrentUserId();
+      await _usersCollection.doc(userId).update({
+        'city': newCity,
+      });
+      print('City updated successfully!');
+    } catch (e) {
+      print('Error updating city: $e');
+    }
+  }
+
+  Future<void> updateClinic(String newClinic) async {
+    try {
+      String? userId = userAuth.getCurrentUserId();
+      await _usersCollection.doc(userId).update({
+        'clinic': newClinic,
+      });
+      print('Clinic updated successfully!');
+    } catch (e) {
+      print('Error updating clinic: $e');
     }
   }
 
@@ -140,20 +268,20 @@ class UserDatabase {
 
 
 
-  Future<void> getUserById(String userId) async {
-    try {
-      DocumentSnapshot snapshot = await _usersCollection.doc(userId).get();
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-        print('User Name: ${data['name']}');
-        print('User Email: ${data['email']}');
-      } else {
-        print('User not found!');
-      }
-    } catch (e) {
-      print('Error retrieving user: $e');
-    }
-  }
+  // Future<void> getUserById(String userId) async {
+  //   try {
+  //     DocumentSnapshot snapshot = await _usersCollection.doc(userId).get();
+  //     if (snapshot.exists) {
+  //       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  //       print('User Name: ${data['name']}');
+  //       print('User Email: ${data['email']}');
+  //     } else {
+  //       print('User not found!');
+  //     }
+  //   } catch (e) {
+  //     print('Error retrieving user: $e');
+  //   }
+  // }
 
   Future<void> updateUser(String userId, String newName) async {
     try {

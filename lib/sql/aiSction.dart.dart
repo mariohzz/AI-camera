@@ -62,10 +62,10 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
 
 
   bool isVideoUploaded = false;
-  String streamUrlButton0 = 'http://192.168.35.117:8080/babinski';
-  String streamUrlButton1 = 'http://192.168.35.117:8080/grasp-reflex';
-  String streamUrlButton2 = 'http://192.168.35.117:8080/RootingReflex';
-  String streamUrlButton3 = 'http://192.168.35.117:8080/tonicNeck';
+  String streamUrlButton0 = 'http://10.0.0.14:5432/babinski';
+  String streamUrlButton1 = 'http://10.0.0.14:5432/grasp-reflex';
+  String streamUrlButton2 = 'http://10.0.0.14:5432/RootingReflex';
+  String streamUrlButton3 = 'http://10.0.0.14:5432/tonicNeck';
 
   @override
   Widget build(BuildContext context) {

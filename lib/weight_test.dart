@@ -18,10 +18,11 @@ class _WeightPageState extends State<WeightPage> {
   TextEditingController pointYController = TextEditingController();
   String closestGraph = '';
   String plotImagePath = '';
-
+  late final pointX;
+  late final  pointY;
   Future<void> getWeight() async {
-    final pointX = double.tryParse(pointXController.text) ?? 0.0;
-    final pointY = double.tryParse(pointYController.text) ?? 0.0;
+     this.pointX = double.tryParse(pointXController.text) ?? 0.0;
+    this.pointY = double.tryParse(pointYController.text) ?? 0.0;
 
     final url = 'http://192.168.35.117:8080/weight';
     final response = await http.post(
@@ -37,6 +38,7 @@ class _WeightPageState extends State<WeightPage> {
       // Save the plot image to file
       final plotFile = 'plot.png';
       final path = await _savePlotImage(plotImage, plotFile);
+      widget.userDatabase.saveGraphAndImage(closestGraph,File(path),this.pointX,this.pointY);
 
       setState(() {
         closestGraph = closestGraph;

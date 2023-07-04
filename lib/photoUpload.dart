@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +16,7 @@ class CircularPhotoUploader extends StatefulWidget {
 
 class _CircularPhotoUploaderState extends State<CircularPhotoUploader> {
   File? _imageFile;
+  bool _isLoading = false;
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -24,14 +24,35 @@ class _CircularPhotoUploaderState extends State<CircularPhotoUploader> {
     setState(() {
       if (pickedImage != null) {
         _imageFile = File(pickedImage.path);
+        _isLoading = true; // Show loading indicator
       }
     });
-    widget.userDatabase.uploadPhoto(_imageFile).then((photoUrl) {
+    widget.userDatabase.uploadPhoto(_imageFile!).then((photoUrl) {
       final photoUrlProvider =
       Provider.of<PhotoUrlProvider>(context, listen: false);
       photoUrlProvider.photoUrl = photoUrl;
+      setState(() {
+        _isLoading = false; // Hide loading indicator
+      });
+      // Show info dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Text('Photo Uploaded'),
+            content: Text('The photo has been successfully uploaded.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
     });
-    Navigator.of(context).pop(); // Close the dialog after selecting an image
   }
 
   @override
@@ -49,6 +70,7 @@ class _CircularPhotoUploaderState extends State<CircularPhotoUploader> {
                     GestureDetector(
                       child: Text('Gallery'),
                       onTap: () {
+                        Navigator.of(dialogContext).pop(); // Close the dialog
                         _pickImage(ImageSource.gallery);
                       },
                     ),
@@ -58,6 +80,7 @@ class _CircularPhotoUploaderState extends State<CircularPhotoUploader> {
                     GestureDetector(
                       child: Text('Camera'),
                       onTap: () {
+                        Navigator.of(dialogContext).pop(); // Close the dialog
                         _pickImage(ImageSource.camera);
                       },
                     ),
@@ -68,36 +91,52 @@ class _CircularPhotoUploaderState extends State<CircularPhotoUploader> {
           },
         );
       },
-      child: Container(
-        width: 120,
-        height: 120,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey[300],
-        ),
-        child: Consumer<PhotoUrlProvider>(
-          builder: (context, photoUrlProvider, _) {
-            return photoUrlProvider.photoUrl != null
-                ? ClipOval(
-              child: Image.network(
-                photoUrlProvider.photoUrl!,
-                fit: BoxFit.cover,
+      child: Stack(
+        children: [
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[300],
+            ),
+            child: Consumer<PhotoUrlProvider>(
+              builder: (context, photoUrlProvider, _) {
+                return photoUrlProvider.photoUrl != null
+                    ? ClipOval(
+                  child: Image.network(
+                    photoUrlProvider.photoUrl!,
+                    fit: BoxFit.cover,
+                  ),
+                )
+                    : _imageFile != null
+                    ? ClipOval(
+                  child: Image.file(
+                    _imageFile!,
+                    fit: BoxFit.cover,
+                  ),
+                )
+                    : Icon(
+                  Icons.camera_alt,
+                  color: Colors.grey[600],
+                  size: 40,
+                );
+              },
+            ),
+          ),
+          if (_isLoading)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            )
-                : _imageFile != null
-                ? ClipOval(
-              child: Image.file(
-                _imageFile!,
-                fit: BoxFit.cover,
-              ),
-            )
-                : Icon(
-              Icons.camera_alt,
-              color: Colors.grey[600],
-              size: 40,
-            );
-          },
-        ),
+            ),
+        ],
       ),
     );
   }

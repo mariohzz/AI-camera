@@ -4,11 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/screens/LoginScreen.dart';
 import 'package:python_project/screens/my_list_page.dart';
+import 'package:python_project/settings.dart';
 import 'package:python_project/sql/aiSction.dart.dart';
 import 'package:python_project/upload.dart';
 import 'package:python_project/userCreate.dart';
 
 import 'auth/auth.dart';
+import 'clinics.dart';
 import 'infopage.dart';
 
 //Home Page
@@ -76,6 +78,7 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
           ProfilePageInfo(widget.userDatabase,widget.userAuth),
           // UploadScreen(1, 'images/Picture.png', tit, sub),
           // Add other page classes here if desired
+          Clinics(widget.userDatabase),
           ProfilePage(widget.userDatabase,widget.userAuth),
         ],
       ),
@@ -164,6 +167,15 @@ class ProfilePage extends StatelessWidget {
               },
               child: Text('Logout'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserProfilePage(userDatabase)),
+                );
+              },
+              child: Text('info update'),
+            ),
           ],
         ),
       ),
@@ -189,6 +201,11 @@ const _navBarItems = [
     icon: Icon(Icons.person_outline_rounded),
     selectedIcon: Icon(Icons.person_rounded),
     label: 'Profile',
+  ),
+  NavigationDestination(
+    icon: Icon(Icons.add_box),
+    selectedIcon: Icon(Icons.person_rounded),
+    label: 'Clinics',
   ),
   NavigationDestination(
     icon: Icon(Icons.settings),

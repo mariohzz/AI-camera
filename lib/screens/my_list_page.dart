@@ -16,6 +16,7 @@ import 'package:python_project/widgets/title_widgets.dart';
 
 import '../chatgpt/api/chat_api.dart';
 import '../chatgpt/chat_page.dart';
+import '../location.dart';
 import '../navigation.dart';
 import '../photoUpload.dart';
 import '../upload.dart';
@@ -192,8 +193,14 @@ class _BottomContainer extends StatelessWidget {
             MaterialPageRoute(builder: (context) =>  ChatApp(chatApi: ChatApi())),
           );
           break;
-
+        case 'screen4':
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LocationSearchScreen()),
+          );
+          break;
       }
+
     }
     /////////////////////////////////////////////////////////////////////////
 
