@@ -6,7 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:python_project/userCreate.dart';
 
 class WeightPage extends StatefulWidget {
-  WeightPage(UserDatabase userDatabase);
+  UserDatabase userDatabase;
+  WeightPage(this.userDatabase);
 
   @override
   _WeightPageState createState() => _WeightPageState();

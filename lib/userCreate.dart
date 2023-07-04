@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:python_project/auth/auth.dart';
-
+import 'package:path/path.dart';
 class UserDatabase {
 
   final CollectionReference _usersCollection = FirebaseFirestore.instance.collection('users');
-  final CollectionReference _usersCollection_results = FirebaseFirestore.instance.collection('results');
+  //final CollectionReference _usersCollection_results = FirebaseFirestore.instance.collection('results');
   final Reference _storageRef = FirebaseStorage.instance.ref().child('videos');
   Auth userAuth;
   get get_userCollection => this._usersCollection;
@@ -101,6 +101,44 @@ class UserDatabase {
       print('Error saving result: $e');
     }
   }
+
+  Future<void> saveGraphAndImage(
+      String closestGraph, File plotImageFile, double ageInWeeks, double weight) async {
+    try {
+      String? userId = userAuth.getCurrentUserId();
+      if (userId != null) {
+        // Create a reference to the "test" collection for the user
+        CollectionReference testCollection =
+        _usersCollection.doc(userId).collection('test');
+
+        // Upload the plot image to Firebase Storage
+        String imageName = basename(plotImageFile.path);
+        TaskSnapshot imageSnapshot = await _storageRef
+            .child('images/$imageName')
+            .putFile(plotImageFile);
+
+        // Retrieve the download URL of the uploaded image
+        String imageUrl = await imageSnapshot.ref.getDownloadURL();
+
+        // Save the closest graph, age in weeks, weight, and the associated image URL in a new document
+        DocumentReference graphAndImageDocRef = await testCollection.add({
+          'closestGraph': closestGraph,
+          'imageUrl': imageUrl,
+          'ageInWeeks': ageInWeeks,
+          'weight': weight,
+        });
+
+        print(
+            'Graph, image, age, and weight saved successfully! Document ID: ${graphAndImageDocRef.id}');
+      } else {
+        print('No authenticated user.');
+      }
+    } catch (e) {
+      print('Error saving graph, image, age, and weight: $e');
+    }
+  }
+
+
 
   Future<void> getUserById(String userId) async {
     try {
