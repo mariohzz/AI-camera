@@ -1,60 +1,122 @@
+//import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/auth/auth.dart';
+import 'package:python_project/screens/LoginScreen.dart';
 
+import '../dropdownmenu.dart';
 import '../userCreate.dart';
 
 class SignupScreen extends StatefulWidget {
   late final UserDatabase userDatabase;
-  SignupScreen(this.userDatabase);
+  final Auth userAuth;
+  SignupScreen(this.userDatabase, this.userAuth);
   @override
-  _SignupScreenState createState() => _SignupScreenState(this.userDatabase);
+  _SignupScreenState createState() => _SignupScreenState(this.userDatabase, this.userAuth);
 }
 
 class _SignupScreenState extends State<SignupScreen> {
   late FocusNode focusNode1;
   late FocusNode focusNode2;
   late FocusNode focusNode3;
+  late FocusNode focusNode4;
+  late FocusNode focusNode5;
   final UserDatabase userDatabase;
+  final Auth userAuth;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _email;
   late String _password;
-    final TextEditingController _controllerEmail =TextEditingController();
-  final TextEditingController _controllerPassword =TextEditingController();
+  late String _name;
+  late String _city;
+  String _selectedOption = '';
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
+  final TextEditingController _controllerCity = TextEditingController();
+  final TextEditingController _controllerChoice = TextEditingController();
+  static const List<String> list = <String>['clalit', 'maccabi', 'meuhedet'];
+  String selectedValue = list.first;
 
-  _SignupScreenState(this.userDatabase);
+  _SignupScreenState(this.userDatabase, this.userAuth);
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(email: _controllerEmail.text, password: _controllerPassword.text);
-      await userDatabase.createUser(_controllerEmail.text, _controllerPassword.text);
-      print('User created successfully!');
+      await userAuth.createUserWithEmailAndPassword(
+        email: _controllerEmail.text,
+        password: _controllerPassword.text,
+      );
+      await userDatabase.createUser(
+        _controllerEmail.text,
+        _controllerPassword.text,
+        _controllerName.text,
+        _controllerCity.text,
+        selectedValue,
+      );
+
+      // Signup successful, show dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Signup Successful'),
+            content: Text('Congratulations! Your account has been created.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen(widget.userDatabase, widget.userAuth)),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
       });
     }
   }
-   Widget _entryField(String Title, TextEditingController controller) {
-    return TextField(
+  Widget _entryField(String title, TextEditingController controller, {bool isPassword = false}) {
+    return TextFormField(
+      onSaved: (value) {
+        controller.text = value!;
+      },
       controller: controller,
+      keyboardType: TextInputType.text,
+      style: const TextStyle(fontSize: 16, color: Colors.black),
+      obscureText: isPassword, // Set obscureText to true for password field
       decoration: InputDecoration(
-        labelText:  
-        Title,
+        labelText: title,
+        contentPadding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.022, horizontal: 15.0),
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+        ),
       ),
     );
   }
-    Widget _logOrReg() {
+
+
+  Widget _logOrReg() {
     return TextButton(
-        onPressed: () {
-          setState(() {
-            isLogin = !isLogin;
-          });
-        },
-        child: Text(isLogin ?'Register instead':'Login instead'));
+      onPressed: () {
+        setState(() {
+          isLogin = !isLogin;
+        });
+      },
+      child: Text(isLogin ? 'Register instead' : 'Login instead'),
+    );
   }
-    bool isLogin = true;
+
+  bool isLogin = true;
   String? errorMessage = '';
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +124,8 @@ class _SignupScreenState extends State<SignupScreen> {
     focusNode1 = FocusNode();
     focusNode2 = FocusNode();
     focusNode3 = FocusNode();
+    focusNode4 = FocusNode();
+    focusNode5 = FocusNode();
   }
 
   @override
@@ -70,282 +134,111 @@ class _SignupScreenState extends State<SignupScreen> {
     focusNode1.dispose();
     focusNode2.dispose();
     focusNode3.dispose();
+    focusNode4.dispose();
+    focusNode5.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height * 0.20,
-            width: MediaQuery.of(context).size.width,
-            child: Stack(
-              children: <Widget>[
-                ClipPath(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.20,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.deepPurple[300],
-                  ),
-                  clipper: RoundedClipper(60),
-                ),
-                ClipPath(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.18,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  clipper: RoundedClipper(50),
-                ),
-                Positioned(
-                    top: -50,
-                    left: -30,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      width: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              (MediaQuery.of(context).size.height * 0.15) / 2),
-                          color: Colors.deepPurple[300]?.withOpacity(0.3)),
-                      child: Center(
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.deepPurpleAccent),
-                        ),
-                      ),
-                    )),
-                Positioned(
-                    top: -50,
-                    left: MediaQuery.of(context).size.width * 0.6,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.20,
-                      width: MediaQuery.of(context).size.height * 0.20,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              (MediaQuery.of(context).size.height * 0.20) / 2),
-                          color: Colors.deepPurple[300]?.withOpacity(0.3)),
-                      child: Center(
-                        child: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.deepPurpleAccent),
-                        ),
-                      ),
-                    )),
-                Positioned(
-                    top: -50,
-                    left: 80,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      width: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                              (MediaQuery.of(context).size.height * 0.15) / 2),
-                          color: Colors.deepPurple[300]?.withOpacity(0.3)),
-                    )),
-                Container(
-                  margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.15 - 50),
-                  height: MediaQuery.of(context).size.height * 0.33,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Sign Up",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: (MediaQuery.of(context).size.height * 0.80) - 22,
-            margin: EdgeInsets.fromLTRB(20, 12, 20, 10),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    onSaved: (val) {
-                      _controllerEmail.text = val!;
-                    },
-                    controller: _controllerEmail,
-                    focusNode: focusNode1,
-                    keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      labelText: "Email",
-                      contentPadding:  EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.022,
-                          horizontal: 15.0),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                      ),
-                    ),
-                    onFieldSubmitted: (String value) {
-                      FocusScope.of(context).requestFocus(focusNode2);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    onSaved: (var val) {
-                      _controllerPassword.text = val!;
-                    },
-                    focusNode: focusNode2,
-                    obscureText: true,
-                    controller: _controllerPassword,
-                    keyboardType: TextInputType.text,
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      contentPadding:  EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.022,
-                          horizontal: 15.0),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                      ),
-                    ),
-                    onFieldSubmitted: (String value) {
-                      FocusScope.of(context).requestFocus(focusNode3);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  
-                  TextFormField(
-                    onSaved: (val) {
-                      _password = val!;
-                    },
-                    focusNode: focusNode3,
-                    obscureText: true,
-                    keyboardType: TextInputType.text,
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
-                    textInputAction: TextInputAction.done,
-                    decoration: InputDecoration(
-                      labelText: "Confirm Password",
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.022,
-                          horizontal: 15.0),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        createUserWithEmailAndPassword();
-                        _entryField('email', _controllerEmail);
-                          _entryField('Password', _controllerPassword);
-                          _logOrReg();
-                      },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.065,
-                        decoration: const BoxDecoration(
-                            color: Colors.deepPurpleAccent,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(25))),
-                        child: const Center(
-                          child: Text(
-                            "SIGN UP",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
-                      )),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        print("pressed");
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                              color: Colors.deepPurpleAccent,
-                              shape: BoxShape.circle),
-                          child:
-                              const Icon(Icons.arrow_back, color: Colors.white))),
-                ],
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(top: 50.0),
               ),
-            ),
-          )
-        ],
+              Container(
+                height: 150,
+                child: const Image(
+                  image: AssetImage("images/baby1.png"),
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        children: [
+                          _entryField("Email", _controllerEmail),
+                          SizedBox(height: 16.0),
+                          _entryField("Password", _controllerPassword,isPassword:true),
+                          SizedBox(height: 16.0),
+                          _entryField("Name", _controllerName),
+                          SizedBox(height: 16.0),
+                          _entryField("City", _controllerCity),
+                          SizedBox(height: 16.0),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(25)),
+                              border: Border.all(color: Colors.grey.shade400),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: selectedValue,
+                                isExpanded: true,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconSize: 30,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedValue = newValue!;
+                                  });
+                                },
+                                items: list.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(fontSize: 16, color: Colors.black),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 16.0),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    Container(
+                      width: 200.0,
+                      height: 50.0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            createUserWithEmailAndPassword();
+                          }
+                        },
+                        child: Text(
+                          isLogin ? 'Signup' : 'Register',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.0),
+              if (errorMessage != null && errorMessage!.isNotEmpty)
+                Text(
+                  errorMessage!,
+                  style: TextStyle(color: Colors.red),
+                ),
+              SizedBox(height: 16.0),
+             //_logOrReg(),
+            ],
+          ),
+        ),
       ),
     );
   }
-
-  bool _value1 = false;
- late bool _autoValidate = false;
-
-  void _value1Changed(bool value) => setState(() => _value1 = value);
-
-  void _validateInputs() {
-    if (_formKey.currentState!.validate()) {
-//    If all data are correct then save data to out variables
-      _formKey.currentState!.save();
-    } else {
-//    If all data are not valid then start auto validation.
-      setState(() {
-        _autoValidate = true;
-      });
-    }
-  }
-
-
-
-  String? validatePassword(String value) {
-    if (value.length < 6)
-      return 'Password must be atleast 6 digits';
-    else {
-      return null;
-    }
-  }
-}
-
-class RoundedClipper extends CustomClipper<Path> {
-  var differenceInHeights = 0;
-
-  RoundedClipper(int differenceInHeights) {
-    this.differenceInHeights = differenceInHeights;
-  }
-
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0, size.height - differenceInHeights);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height);
-    path.lineTo(size.width, 0);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

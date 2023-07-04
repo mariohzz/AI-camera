@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:python_project/auth/auth.dart';
 import 'package:python_project/screens/SignupScreen.dart';
+import 'package:python_project/screens/my_list_page.dart';
 
 import '../navigation.dart';
 import '../userCreate.dart';
@@ -10,7 +11,9 @@ import '../widgets/logo.dart';
 
 class LoginScreen extends StatefulWidget {
   late final UserDatabase userDatabase;
-  LoginScreen(this.userDatabase);
+  final Auth userAuth;
+
+  LoginScreen(this.userDatabase,this.userAuth);
   @override
   _LoginScreenState createState() => _LoginScreenState(userDatabase);
 }
@@ -27,12 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> signWithEmailAndPassword() async {
     try {
-      await Auth().signInWithEmailAndPassword(
+      await widget.userAuth.signInWithEmailAndPassword(
           email: _controllerEmail.text, password: _controllerPassword.text);
       // Navigate to the Material3BottomNav page
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Material3BottomNav(userDatabase,0)),
+        MaterialPageRoute(builder: (context) => Material3BottomNav(userDatabase,0,widget.userAuth)),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -89,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -217,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             print("signup");
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SignupScreen(userDatabase)),
+                              MaterialPageRoute(builder: (context) => SignupScreen(userDatabase,widget.userAuth)),
                             );
                           },
                           child: Center(

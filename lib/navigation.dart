@@ -9,13 +9,17 @@ import 'package:python_project/upload.dart';
 import 'package:python_project/userCreate.dart';
 
 import 'auth/auth.dart';
+import 'infopage.dart';
 
 //Home Page
 
 class Material3BottomNav extends StatefulWidget {
   final UserDatabase userDatabase;
+  final Auth userAuth;
+
   final int _selectedIndex;
-  Material3BottomNav(this.userDatabase,this._selectedIndex ,{super.key});
+  Material3BottomNav(this.userDatabase,this._selectedIndex ,this.userAuth
+  ,{super.key});
   @override
   State<Material3BottomNav> createState() => _Material3BottomNavState(_selectedIndex);
 }
@@ -67,11 +71,12 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
         controller: _pageController,
         onPageChanged: _onPageChanged,
         children: [
-          MyListPage(widget.userDatabase),
-          CameraHomeScreen(widget.userDatabase),
+          MyListPage(widget.userDatabase,widget.userAuth),
+          CameraHomeScreen(widget.userDatabase,widget.userAuth),
+          ProfilePageInfo(widget.userDatabase,widget.userAuth),
           // UploadScreen(1, 'images/Picture.png', tit, sub),
           // Add other page classes here if desired
-          ProfilePage(widget.userDatabase),
+          ProfilePage(widget.userDatabase,widget.userAuth),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -126,17 +131,18 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
 
 
 class ProfilePage extends StatelessWidget {
-  final User? user = Auth().currentuser;
   final UserDatabase userDatabase;
-  ProfilePage(this.userDatabase);
+  final Auth userAuth;
 
-  Future<void> signOut(BuildContext context) async {
-    await Auth().signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen(this.userDatabase)),
-    );
-  }
+  ProfilePage(this.userDatabase,this.userAuth);
+
+  // Future<void> signOut(BuildContext context) async {
+  //   await userAuth.signOut();
+  //   Navigator.pushReplacement(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => LoginScreen(this.userDatabase,userAuth)),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,13 +154,13 @@ class ProfilePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'User: ${user?.email ?? 'Unknown'}',
+              'User: ${userAuth.getCurrentUser()?.email ?? 'Unknown'}',
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                signOut(context);
+                userAuth.signOut(context,userDatabase,userAuth);
               },
               child: Text('Logout'),
             ),
@@ -179,14 +185,14 @@ const _navBarItems = [
     selectedIcon: Icon(Icons.bookmark_rounded),
     label: 'Tests',
   ),
-  // NavigationDestination(
-  //   icon: Icon(Icons.shopping_bag_outlined),
-  //   selectedIcon: Icon(Icons.shopping_bag),
-  //   label: 'Cart',
-  // ),
   NavigationDestination(
     icon: Icon(Icons.person_outline_rounded),
     selectedIcon: Icon(Icons.person_rounded),
     label: 'Profile',
+  ),
+  NavigationDestination(
+    icon: Icon(Icons.settings),
+    selectedIcon: Icon(Icons.settings_accessibility_outlined),
+    label: 'Settings',
   ),
 ];

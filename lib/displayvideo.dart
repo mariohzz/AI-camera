@@ -63,12 +63,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
       if (response.statusCode == 200) {
         String? stringData = response.headers['result'];
-        widget.userDatabase.saveBabinski(stringData!);
         print(stringData);
         final File videoFile = File(videoPath);
+        widget.userDatabase.saveResult(stringData!,videoFile);
         await videoFile.writeAsBytes(response.bodyBytes);
-
         _controller = VideoPlayerController.file(videoFile);
+
         await _controller.initialize();
 
         _chewieController = ChewieController(

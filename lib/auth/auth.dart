@@ -1,10 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../screens/LoginScreen.dart';
+import '../userCreate.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   User? get currentuser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+
+
 
   Future<void> signInWithEmailAndPassword({
     required String email,
@@ -26,9 +32,15 @@ class Auth {
     );
   }
 
-  Future<void> signOut() async{
+  Future<void> signOut(BuildContext context,UserDatabase userDatabase,Auth userAuth) async{
     await _firebaseAuth.signOut();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen(userDatabase,userAuth)),
+    );
   }
+
   User? getCurrentUser() {
     return _firebaseAuth.currentUser;
   }

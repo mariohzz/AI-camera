@@ -7,16 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../auth/auth.dart';
 import '../displayvideo.dart';
 import '../upload.dart';
 import '../userCreate.dart';
+import '../weight_test.dart';
 import '../widgets/logo.dart';
 
 
 
 class CameraHomeScreen extends StatefulWidget {
   final UserDatabase userDatabase;
-  CameraHomeScreen(this.userDatabase);
+  final Auth userAuth;
+  CameraHomeScreen(this.userDatabase,this.userAuth);
 
   @override
   _CameraHomeScreenState createState() => _CameraHomeScreenState();
@@ -31,25 +34,25 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
       case 'babnski':
     Navigator.push(
                 context,
-                 MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton0)),
+                 MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,widget.userAuth,1,'images/Picture.png',tit,sub,streamUrlButton0)),
               );
         break;
       case 'grasp':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton1)),
+          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,widget.userAuth,1,'images/Picture.png',tit,sub,streamUrlButton1)),
         );
         break;
       case 'rooting':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton2)),
+          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,widget.userAuth,1,'images/Picture.png',tit,sub,streamUrlButton2)),
         );
         break;
       case 'tonic':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,1,'images/Picture.png',tit,sub,streamUrlButton3)),
+          MaterialPageRoute(builder: (context) => UploadScreen(widget.userDatabase,widget.userAuth,1,'images/Picture.png',tit,sub,streamUrlButton3)),
         );
         break;
     }
@@ -100,6 +103,48 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                 crossAxisSpacing: 17,
                 shrinkWrap: true,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => WeightPage(widget.userDatabase)),
+                      );
+                    },
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              'Weight',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Image.asset(
+                            'images/weight.png',
+                            width: 140,
+                            fit: BoxFit.fill,
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () {
                       navigateToScreen(context, 'babnski');

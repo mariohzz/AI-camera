@@ -10,7 +10,9 @@ import 'navigation.dart';
 
 class WidgetTree extends StatefulWidget {
   final UserDatabase userDatabase;
-  const WidgetTree(this.userDatabase);
+  final Auth userAuth;
+
+  const WidgetTree(this.userDatabase,this.userAuth);
 
   @override
   State<WidgetTree> createState() => _WidgetTreeState();
@@ -20,12 +22,12 @@ class _WidgetTreeState extends State<WidgetTree> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Auth().authStateChanges,
+      stream: widget.userAuth.authStateChanges,
       builder: (context, Snapshot) {
         if (Snapshot.hasData) {
-          return Material3BottomNav(widget.userDatabase,0);
+          return Material3BottomNav(widget.userDatabase,0,widget.userAuth);
         } else {
-          return LoginScreen(widget.userDatabase);
+          return LoginScreen(widget.userDatabase,widget.userAuth);
         }
       },
     );

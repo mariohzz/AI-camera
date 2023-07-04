@@ -22,9 +22,10 @@ import '../upload.dart';
 import '../userCreate.dart';
 
 late final UserDatabase userDatabase;
+late final Auth userAuth;
 class MyListPage extends StatelessWidget {
   final username = 'jamescardona11';
-  MyListPage(userDatabase);
+  MyListPage(userDatabase,userAuth);
   // final User? user = Auth().currentuser;
   // Future<void> singout(BuildContext context) async {
   //   await Auth().signOut();
@@ -176,7 +177,7 @@ class _BottomContainer extends StatelessWidget {
         case 'screen1':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CameraHomeScreen(userDatabase)),
+            MaterialPageRoute(builder: (context) => CameraHomeScreen(userDatabase,userAuth)),
           );
           break;
         case 'screen2':

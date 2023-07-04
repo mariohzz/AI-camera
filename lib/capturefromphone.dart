@@ -12,6 +12,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
+import 'auth/auth.dart';
 import 'displayvideo.dart';
 import 'navigation.dart';
 // late final String reflexRun;
@@ -20,8 +21,9 @@ import 'navigation.dart';
 class VideoCaptureWidget extends StatefulWidget {
   final String reflex;
   final UserDatabase userDatabase;
+  final Auth userAuth;
 
-  VideoCaptureWidget({required this.reflex, required this.userDatabase});
+  VideoCaptureWidget({required this.reflex, required this.userDatabase,required this.userAuth});
 
   @override
   _VideoCaptureWidgetState createState() => _VideoCaptureWidgetState();
@@ -30,12 +32,15 @@ class VideoCaptureWidget extends StatefulWidget {
 class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
   late String reflexRun;
   late UserDatabase userDatabase;
+  late final Auth userAuth;
 
   @override
   void initState() {
     super.initState();
     reflexRun = widget.reflex;
     userDatabase = widget.userDatabase;
+    userAuth = widget.userAuth;
+
   }
 
   @override
@@ -52,7 +57,7 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
               return Container(); // Or display an error widget
             }
             final firstCamera = cameras.first;
-            return TakePictureScreen(camera: firstCamera,reflexRun:reflexRun,userDatabase:userDatabase);
+            return TakePictureScreen(camera: firstCamera,reflexRun:reflexRun,userDatabase:userDatabase,userAuth:userAuth);
           } else if (snapshot.hasError) {
             debugPrint("Failed to get available cameras: ${snapshot.error}");
             return Container(); // Or display an error widget
@@ -90,12 +95,13 @@ class _VideoCaptureWidgetState extends State<VideoCaptureWidget> {
 class TakePictureScreen extends StatefulWidget {
   final String reflexRun;
   final UserDatabase userDatabase;
-
+   final Auth userAuth;
   const TakePictureScreen({
     Key? key,
     required this.camera,
     required this.reflexRun,
     required this.userDatabase,
+    required this.userAuth,
     required
   }) : super(key: key);
 
@@ -221,7 +227,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Material3BottomNav(widget.userDatabase,1)),
+              MaterialPageRoute(builder: (context) => Material3BottomNav(widget.userDatabase,1,widget.userAuth)),
             );
             // Add your navigation logic here to handle the back button press
             // For example, you can use Navigator.pop(context) to navigate back.
@@ -349,6 +355,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreenThis> {
     request.files.add(videoMultipartFile);
 
     final response = await http.Response.fromStream(await request.send());
+
+// String? stringData = response.headers['result'];
+// print(stringData);
+// final File videoFile = File(videoPath);
+// widget.userDatabase.saveResult(stringData!,videoFile);
     if (response.statusCode == 200) {
       showDialog(
         context: context,
