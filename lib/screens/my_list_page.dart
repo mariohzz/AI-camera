@@ -15,7 +15,10 @@ import 'package:python_project/utils.dart';
 import 'package:python_project/widgets/day_item.dart';
 import 'package:python_project/widgets/title_widgets.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../babysitter.dart';
 import '../chatgpt/api/chat_api.dart';
 import '../chatgpt/chat_page.dart';
 import '../location.dart';
@@ -80,13 +83,20 @@ class MyListPage extends StatelessWidget {
                centerTitle: true,
 
              ),
+
+              // VideoList(
+              //   videoIds: [
+              //     '7HjMrv5Zq7g',
+              //     'yFZB88Jy9Mw'],),
+
             //const Material3BottomNav(),
             //TitleWidget(title: 'My List'),
             //DatePicker(),
             // Center(
             //   child: CircularPhotoUploader(),
             // ),
-            _DatePicker(),
+           // _DatePicker(),
+
             Expanded(child: _BottomContainer()),
           ],
         ),
@@ -132,149 +142,11 @@ class _CustomAppBar extends StatelessWidget {
 }
 
 
-import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
-class _DatePicker extends StatefulWidget {
-  @override
-  __DatePickerState createState() => __DatePickerState();
-}
 
-class __DatePickerState extends State<_DatePicker> {
-  final List<String> videoUrls = [
-    'https://raw.githubusercontent.com/username/repository/master/videos/video1.mp4',
-    'https://raw.githubusercontent.com/username/repository/master/videos/video2.mp4',
-    'https://raw.githubusercontent.com/username/repository/master/videos/video3.mp4',
-    'https://raw.githubusercontent.com/username/repository/master/videos/video4.mp4',
-    'https://raw.githubusercontent.com/username/repository/master/videos/video5.mp4',
-  ];
-  final selectedItem = ValueNotifier<int>(0);
 
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: videoUrls.length,
-        itemBuilder: (_, index) {
-          return ValueListenableBuilder(
-            valueListenable: selectedItem,
-            builder: (_, value, __) => GestureDetector(
-              onTap: () => onPressItem(index),
-              child: VideoItem(
-                videoUrl: videoUrls[index],
-                selectedItem: index == selectedItem.value,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 
-  void onPressItem(int index) {
-    selectedItem.value = index;
-    // Navigate to the corresponding page using the selected video URL
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VideoPage(videoUrl: videoUrls[index]),
-      ),
-    );
-  }
-}
 
-class VideoItem extends StatelessWidget {
-  final String videoUrl;
-  final bool selectedItem;
-
-  const VideoItem({
-    required this.videoUrl,
-    required this.selectedItem,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(8),
-      child: Stack(
-        children: [
-          Image.network(
-            'https://raw.githubusercontent.com/username/repository/master/images/placeholder.jpg',
-            width: 80,
-            height: 80,
-            fit: BoxFit.cover,
-          ),
-          if (selectedItem)
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Container(
-                width: 80,
-                height: 80,
-                color: Colors.black.withOpacity(0.5),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class VideoPage extends StatefulWidget {
-  final String videoUrl;
-
-  const VideoPage({required this.videoUrl});
-
-  @override
-  _VideoPageState createState() => _VideoPageState();
-}
-
-class _VideoPageState extends State<VideoPage> {
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
-
-  @override
-  void initState() {
-    super.initState();
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: true,
-      looping: true,
-    );
-  }
-
-  @override
-  void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Video Page'),
-      ),
-      body: Center(
-        child: Chewie(
-          controller: _chewieController,
-        ),
-      ),
-    );
-  }
-}
 
 
 class _BottomContainer extends StatelessWidget {
@@ -330,45 +202,101 @@ class _BottomContainer extends StatelessWidget {
           children: [
             SizedBox(),
             SizedBox(),
-
-            // GestureDetector(
-            //     onTap: () {
-            //       navigateToScreen(
-            //           context, 'screen2'); // Pass the identifier for screen 1
-            //     },
+            // ElevatedButton(
             //
-            //     child: Container(
-            //       child: Column(
-            //           mainAxisAlignment: MainAxisAlignment.center,
-            //           children: [
-            //             Padding(
-            //               padding: const EdgeInsets.only(top: 5),
-            //               child: Text('Art',
-            //                   style: TextStyle(
-            //                       fontSize: 18, fontWeight: FontWeight.bold)),
-            //             ),
-            //             Image.asset(
-            //               width: 140,
-            //               'images/vector-color-paint.png',
-            //               fit: BoxFit.fill,
-            //             ),
-            //           ]),
-            //       decoration: BoxDecoration(
-            //         color: Colors
-            //             .cyan, // Set the background color of the container
-            //         borderRadius: BorderRadius.circular(
-            //             8.0), // Set the border radius of the container
-            //         boxShadow: [
-            //           BoxShadow(
-            //             color: Colors.grey.withOpacity(
-            //                 0.5), // Set the color and opacity of the shadow
-            //             spreadRadius: 2, // Set the spread radius of the shadow
-            //             blurRadius: 5, // Set the blur radius of the shadow
-            //             offset: Offset(0, 3), // Set the offset of the shadow
-            //           ),
-            //         ],
-            //       ),
-            //     )),
+            //     onPressed:(){
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => VideoList(
+            //           videoIds: [
+            //             '7HjMrv5Zq7g',
+            //             'yFZB88Jy9Mw',
+            //           ],
+            //         ),),
+            //       );
+            // // }, child: Text("press"),
+            // ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BabysitterPage()),
+                );
+              },
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        'Find a BabySitter',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Image.asset(
+                      'images/baby1.png',
+                      width: 120,
+                      fit: BoxFit.fill,
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.cyan,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(
+                onTap: () {
+                  navigateToScreen(
+                      context, 'screen2'); // Pass the identifier for screen 1
+                },
+
+                child: Container(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text('Art',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        Image.asset(
+                          width: 120,
+                          'images/vector-color-paint.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ]),
+                  decoration: BoxDecoration(
+                    color: Colors
+                        .cyan, // Set the background color of the container
+                    borderRadius: BorderRadius.circular(
+                        8.0), // Set the border radius of the container
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(
+                            0.5), // Set the color and opacity of the shadow
+                        spreadRadius: 2, // Set the spread radius of the shadow
+                        blurRadius: 5, // Set the blur radius of the shadow
+                        offset: Offset(0, 3), // Set the offset of the shadow
+                      ),
+                    ],
+                  ),
+                )),
+
             GestureDetector(
                 onTap: () {
                   navigateToScreen(

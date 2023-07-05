@@ -17,7 +17,14 @@ class ResultsPage extends StatefulWidget {
 
 class _ResultsPageState extends State<ResultsPage> {
   List<Map<String, dynamic>> results = [];
-
+  List<Color> cardColors = [
+    Colors.blue,
+    Colors.green,
+    Colors.orange,
+    Colors.purple,
+    Colors.cyan,
+    // Add more colors as needed
+  ];
   @override
   void initState() {
     super.initState();
@@ -99,11 +106,14 @@ class _ResultsPageState extends State<ResultsPage> {
           double ageInWeeks = result['ageInWeeks'];
           double weight = result['weight'];
 
+          Color cardColor = cardColors[index % cardColors.length]; // Get color based on index
+
           return GestureDetector(
             onTap: () {
               _showResultDetailsDialog(imageUrl, closestGraph, ageInWeeks, weight);
             },
             child: Card(
+              color: cardColor, // Set the color for the card
               child: ListTile(
                 leading: Image.network(
                   imageUrl,
@@ -121,4 +131,5 @@ class _ResultsPageState extends State<ResultsPage> {
       ),
     );
   }
+
 }

@@ -83,7 +83,7 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
           // UploadScreen(1, 'images/Picture.png', tit, sub),
           // Add other page classes here if desired
           Clinics(widget.userDatabase),
-          ResultsPage(widget.userDatabase,widget.userAuth),
+          //ResultsPage(widget.userDatabase,widget.userAuth),
           ProfilePage(widget.userDatabase,widget.userAuth),
         ],
       ),
@@ -212,11 +212,11 @@ const _navBarItems = [
     selectedIcon: Icon(Icons.person_rounded),
     label: 'Clinics',
   ),
-  NavigationDestination(
-    icon: Icon(Icons.settings),
-    selectedIcon: Icon(Icons.ac_unit_rounded),
-    label: 'weight',
-  ),
+  // NavigationDestination(
+  //   icon: Icon(Icons.settings),
+  //   selectedIcon: Icon(Icons.ac_unit_rounded),
+  //   label: 'weight',
+  // ),
   NavigationDestination(
     icon: Icon(Icons.settings),
     selectedIcon: Icon(Icons.settings_accessibility_outlined),

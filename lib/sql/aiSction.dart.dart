@@ -6,7 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
 import 'package:file_picker/file_picker.dart';
-
+import '../videosLearn.dart';
 import '../auth/auth.dart';
 import '../displayvideo.dart';
 import '../upload.dart';
@@ -15,6 +15,74 @@ import '../weight_test.dart';
 import '../widgets/logo.dart';
 
 
+class _DatePicker extends StatefulWidget {
+  @override
+  __DatePickerState createState() => __DatePickerState();
+}
+
+class __DatePickerState extends State<_DatePicker> {
+  final List<String> videoIds = [
+    'yFZB88Jy9Mw',
+    '_Kfu5iU7Qq4',
+    'yAF6dh8a0Aw',
+    '7HjMrv5Zq7g',
+  ];
+  final List<String> thumbnailUrls = [
+    'images/babnski.jpg',
+    'images/grasp.jpg',
+    'images/rooting.jpg',
+    'images/tonicneck.jpg'
+  ];
+  final List<String> titles = [
+    'Babnski',
+    'Grasp',
+    'Rooting',
+    'Tonicneck',
+  ];
+  final selectedItem = ValueNotifier<int>(0);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      width: size.width,
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: videoIds.length,
+        itemBuilder: (_, index) {
+          return ValueListenableBuilder(
+            valueListenable: selectedItem,
+            builder: (_, value, __) => GestureDetector(
+              onTap: () => onPressItem(index),
+              child: VideoItem(
+                videoId: videoIds[index],
+                thumbnailUrl: thumbnailUrls[index],
+                title: titles[index],
+                selectedItem: index == selectedItem.value,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void onPressItem(int index) {
+    selectedItem.value = index;
+    // Navigate to the corresponding page using the selected video ID
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoPage(
+          videoId: videoIds[index],
+          thumbnailUrl: thumbnailUrls[index],
+          title: titles[index],
+        ),
+      ),
+    );
+  }
+}
 
 class CameraHomeScreen extends StatefulWidget {
   final UserDatabase userDatabase;
@@ -79,7 +147,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
       appBar: showAppBar ? AppBar(title: const Text(
         'Test Page',
         style: TextStyle(
-            fontSize: 30.0,
+            fontSize: 25.0,
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
@@ -91,7 +159,16 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 220),
+            Text(
+              'Learn Videos',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                // Other text style properties
+              ),
+            ),
+            _DatePicker(),
+            SizedBox(height:30),
             Container(
               width: size.width,
               child: GridView.count(
@@ -103,6 +180,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                 crossAxisSpacing: 17,
                 shrinkWrap: true,
                 children: [
+
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
