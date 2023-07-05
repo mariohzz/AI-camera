@@ -18,13 +18,17 @@ class _WeightPageState extends State<WeightPage> {
   TextEditingController pointYController = TextEditingController();
   String closestGraph = '';
   String plotImagePath = '';
-  late final pointX;
-  late final  pointY;
+  late var  pointX;
+  late var pointY;
   Future<void> getWeight() async {
+    // setState(() {
+    //   closestGraph = '';
+    //   plotImagePath = '';
+    // });
      this.pointX = double.tryParse(pointXController.text) ?? 0.0;
     this.pointY = double.tryParse(pointYController.text) ?? 0.0;
 
-    final url = 'http://192.168.35.117:8080/weight';
+    final url = 'http://10.0.0.14:5432/weight';
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode({'point_x': pointX, 'point_y': pointY}),

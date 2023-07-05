@@ -2,12 +2,15 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:python_project/photoUpload.dart';
 import 'package:python_project/screens/LoginScreen.dart';
 import 'package:python_project/screens/my_list_page.dart';
 import 'package:python_project/settings.dart';
 import 'package:python_project/sql/aiSction.dart.dart';
 import 'package:python_project/upload.dart';
 import 'package:python_project/userCreate.dart';
+import 'package:python_project/weightresult.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'auth/auth.dart';
 import 'clinics.dart';
@@ -18,7 +21,6 @@ import 'infopage.dart';
 class Material3BottomNav extends StatefulWidget {
   final UserDatabase userDatabase;
   final Auth userAuth;
-
   final int _selectedIndex;
   Material3BottomNav(this.userDatabase,this._selectedIndex ,this.userAuth
   ,{super.key});
@@ -29,11 +31,13 @@ class Material3BottomNav extends StatefulWidget {
 class _Material3BottomNavState extends State<Material3BottomNav> {
   late PageController _pageController = PageController();
   int _selectedIndex;
+  late CircularPhotoUploader photo;
 
   _Material3BottomNavState(this._selectedIndex);
   @override
   void initState() {
     super.initState();
+    photo = CircularPhotoUploader(widget.userDatabase);
     _pageController = PageController(initialPage: _selectedIndex); // Initialize the PageController with the initial index
   }
 
@@ -75,10 +79,11 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
         children: [
           MyListPage(widget.userDatabase,widget.userAuth),
           CameraHomeScreen(widget.userDatabase,widget.userAuth),
-          ProfilePageInfo(widget.userDatabase,widget.userAuth),
+          ProfilePageInfo(widget.userDatabase,widget.userAuth,this.photo),
           // UploadScreen(1, 'images/Picture.png', tit, sub),
           // Add other page classes here if desired
           Clinics(widget.userDatabase),
+          ResultsPage(widget.userDatabase,widget.userAuth),
           ProfilePage(widget.userDatabase,widget.userAuth),
         ],
       ),
@@ -206,6 +211,11 @@ const _navBarItems = [
     icon: Icon(Icons.add_box),
     selectedIcon: Icon(Icons.person_rounded),
     label: 'Clinics',
+  ),
+  NavigationDestination(
+    icon: Icon(Icons.settings),
+    selectedIcon: Icon(Icons.ac_unit_rounded),
+    label: 'weight',
   ),
   NavigationDestination(
     icon: Icon(Icons.settings),

@@ -68,6 +68,9 @@ dependencies:
   camera: ^0.10.5+2
   http_parser: ^4.0.0
   provider: ^6.0.5
+  shared_preferences: ^2.2.0
+  introduction_screen:
+    path: C:\Users\bilal\StudioProjects\AI-camera111111111111\introscreen
 
 
 
@@ -127,6 +130,10 @@ flutter:
      - images/tonic.jpg
      - images/maps.png
      - images/weight.png
+     - images/img1.jpg
+     - images/img2.jpg
+     - images/img3.jpg
+     - images/img4.jpg
 
   #   - family: Trajan Pro
   #     fonts:

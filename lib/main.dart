@@ -9,8 +9,11 @@ import 'package:python_project/sql/aiSction.dart.dart';
 import 'package:python_project/userCreate.dart';
 import 'package:python_project/widget_tree.dart';
 import 'package:python_project/upload.dart';
+import 'package:introduction_screen/main.dart';
 import 'auth/auth.dart';
 import 'navigation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'screens/my_list_page.dart';
 
 Future<void> main() async{
@@ -25,19 +28,61 @@ Future<void> main() async{
   //runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key});
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late SharedPreferences _prefs;
+  bool _showIntro = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+    bool showIntro = _prefs.getBool('showIntro') ?? true;
+    setState(() {
+      _showIntro = showIntro;
+    });
+  }
+
+  Future<void> _updatePreferences() async {
+    await _prefs.setBool('showIntro', false);
+  }
 
   @override
   Widget build(BuildContext context) {
     Auth userAuth = Auth();
     UserDatabase userDatabase = UserDatabase(userAuth);
+    CircularPhotoUploader photo;
     return ChangeNotifierProvider(
       create: (context) => PhotoUrlProvider(),
       child: MaterialApp(
         home: Scaffold(
-          body: HomeScreen(userAuth:userAuth,userDatabase: userDatabase,), // Replace with the HomeScreen widget
-          //bottomNavigationBar: const BottomBarWidget(),
+          body: _showIntro
+              ? IntroScreen(
+            onDone: () {
+              _updatePreferences().then((_) {
+                setState(() {
+                  _showIntro = false;
+                });
+              });
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(userDatabase: userDatabase,userAuth: userAuth),
+                ),
+              );
+            },
+          )
+              : HomeScreen(userDatabase: userDatabase,userAuth: userAuth),
         ),
       ),
     );
@@ -46,7 +91,6 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   final UserDatabase userDatabase;
   final Auth userAuth;
-
   const HomeScreen({required this.userDatabase, required this.userAuth});
 
   @override

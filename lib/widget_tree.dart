@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:python_project/auth/auth.dart';
+import 'package:python_project/photoUpload.dart';
 import 'package:python_project/screens/LoginScreen.dart';
 import 'package:python_project/screens/my_list_page.dart';
 import 'package:python_project/userCreate.dart';
@@ -11,7 +12,6 @@ import 'navigation.dart';
 class WidgetTree extends StatefulWidget {
   final UserDatabase userDatabase;
   final Auth userAuth;
-
   const WidgetTree(this.userDatabase,this.userAuth);
 
   @override

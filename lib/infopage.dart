@@ -199,8 +199,9 @@ import 'package:python_project/auth/auth.dart';
 class ProfilePageInfo extends StatefulWidget {
   final UserDatabase userDatabase;
   final Auth userAuth;
+  final CircularPhotoUploader photo;
 
-  ProfilePageInfo(this.userDatabase, this.userAuth);
+  ProfilePageInfo(this.userDatabase, this.userAuth,this.photo);
 
   @override
   _ProfilePageInfoState createState() => _ProfilePageInfoState();
@@ -249,7 +250,8 @@ class _ProfilePageInfoState extends State<ProfilePageInfo> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // Display the user's circular photo uploader
-          CircularPhotoUploader(widget.userDatabase),
+         // CircularPhotoUploader(widget.userDatabase),
+          widget.photo,
           //Display the user's information
           _currentUser != null
               ? ListTile(
