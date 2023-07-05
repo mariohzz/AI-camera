@@ -86,6 +86,7 @@ class _ResultsPageState extends State<ResultsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan,
         title: Text('Weight Test Results'),
         centerTitle: true,
       ),

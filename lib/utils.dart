@@ -19,20 +19,14 @@ String dayName(int day) {
 
   switch (finalDay) {
     case 1:
-      return 'Mon';
+      return 'Babnski';
     case 2:
-      return 'Tue';
+      return 'Tonicneck';
     case 3:
-      return 'Wed';
+      return 'Rooting';
     case 4:
-      return 'Thu';
-    case 5:
-      return 'Fry';
-    case 6:
-      return 'Sat';
-    case 7:
-      return 'Sun';
+      return 'Grasp';
   }
 
-  return 'Mon';
+  return 'Weight';
 }
