@@ -71,10 +71,11 @@ class _ProfilePageInfoState extends State<ProfilePageInfo> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white10,
       appBar: AppBar(
         backgroundColor: Colors.cyan,
         title: Text('Profile Page'),
+        centerTitle: true,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

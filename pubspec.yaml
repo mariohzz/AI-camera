@@ -71,6 +71,8 @@ dependencies:
   shared_preferences: ^2.2.0
   youtube_player_flutter: ^8.1.2
   url_launcher: ^6.1.11
+  googleapis: ^3.0.0
+  googleapis_auth: ^1.4.1
   introduction_screen:
     path: C:\Users\bilal\StudioProjects\AI-camera111111111111\introscreen
 
@@ -139,6 +141,9 @@ flutter:
      - images/sitter.png
      - images/Babysitter.jpg
      - images/products.png
+     - images/find.png
+     - images/fun.jpg
+     - images/toys.jpg
 
 
 

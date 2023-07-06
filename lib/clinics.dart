@@ -21,11 +21,11 @@ class _ClinicsState extends State<Clinics> {
   @override
   void initState() {
     super.initState();
-    _searchMarkets();
+    _searchClinics();
   }
 
-  Future<void> _searchMarkets() async {
-    final String url = 'http://10.0.0.14:5000/search';
+  Future<void> _searchClinics() async {
+    final String url = 'http://16.170.202.231:8181/search';
     // Update with your server URL
     Map<String, dynamic> userData = await widget.userDatabase.getUserById();
     String? cityName = userData['city'];
@@ -46,25 +46,53 @@ class _ClinicsState extends State<Clinics> {
     }
   }
 
+  // Define a list of colors for the cards
+  List<Color> _cardColors = [
+    Colors.red,
+    Colors.blue,
+    Colors.green,
+    Colors.cyan,
+    Colors.orange,
+    Colors.pinkAccent
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Clinics"),),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.cyan,
+        title: Text("Clinics"),
+        centerTitle: true,
+      ),
       body: ListView.builder(
         itemCount: _marketResults.length,
         itemBuilder: (ctx, index) {
           final market = _marketResults[index];
-          return ListTile(
-            title: Text(market['name']),
-            subtitle: Text(market['address']),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MarketPlaceDetailScreen(place: market),
+          final color = _cardColors[index % _cardColors.length]; // Get color based on index
+          return Card(
+            color: color, // Set the background color of the card
+            child: ListTile(
+              title: Text(
+                market['name'],
+                style: TextStyle(
+                  color: Colors.white, // Set the text color to white
+                  fontWeight: FontWeight.bold,
                 ),
-              );
-            },
+              ),
+              subtitle: Text(
+                market['address'],
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MarketPlaceDetailScreen(place: market),
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

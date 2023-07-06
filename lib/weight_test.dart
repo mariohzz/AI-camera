@@ -18,22 +18,30 @@ class _WeightPageState extends State<WeightPage> {
   TextEditingController pointYController = TextEditingController();
   String closestGraph = '';
   String plotImagePath = '';
-  late var  pointX;
+  late var pointX;
   late var pointY;
+  bool _isCalculating = false;
+
   Future<void> getWeight() async {
-    // setState(() {
-    //   closestGraph = '';
-    //   plotImagePath = '';
-    // });
-     this.pointX = double.tryParse(pointXController.text) ?? 0.0;
+    setState(() {
+      closestGraph = '';
+      plotImagePath = '';
+      _isCalculating = true;
+    });
+
+    this.pointX = double.tryParse(pointXController.text) ?? 0.0;
     this.pointY = double.tryParse(pointYController.text) ?? 0.0;
 
-    final url = 'http://10.0.0.14:5432/weight';
+    final url = 'http://16.170.202.231:8080/weight';
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode({'point_x': pointX, 'point_y': pointY}),
       headers: {'Content-Type': 'application/json'},
     );
+
+    setState(() {
+      _isCalculating = false;
+    });
 
     if (response.statusCode == 200) {
       closestGraph = response.headers['closest_graph'] ?? '';
@@ -42,7 +50,7 @@ class _WeightPageState extends State<WeightPage> {
       // Save the plot image to file
       final plotFile = 'plot.png';
       final path = await _savePlotImage(plotImage, plotFile);
-      widget.userDatabase.saveGraphAndImage(closestGraph,File(path),this.pointX,this.pointY);
+      widget.userDatabase.saveGraphAndImage(closestGraph, File(path), this.pointX, this.pointY);
 
       setState(() {
         closestGraph = closestGraph;
@@ -74,24 +82,61 @@ class _WeightPageState extends State<WeightPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              TextField(
-                controller: pointXController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Your Baby age:(in weeks)',
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
-              ),
-              TextField(
-                controller: pointYController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'your Baby weight:',
+                child: TextField(
+                  controller: pointXController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Your Baby Age (in weeks)',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(16.0),
+                  ),
                 ),
               ),
               SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: getWeight,
-                child: Text('See Result'),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: TextField(
+                  controller: pointYController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Your Baby Weight',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(16.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: _isCalculating ? null : getWeight,
+                child: Container(
+                  height: 50.0,
+                  decoration: BoxDecoration(
+                    color: _isCalculating ? Colors.grey : Colors.blue,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Center(
+                    child: _isCalculating
+                        ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                        : Text(
+                      'See Result',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 16.0),
               Text('Closest Graph: $closestGraph'),

@@ -21,11 +21,14 @@ import 'package:url_launcher/url_launcher.dart';
 import '../babysitter.dart';
 import '../chatgpt/api/chat_api.dart';
 import '../chatgpt/chat_page.dart';
+import '../funpage.dart';
 import '../location.dart';
 import '../navigation.dart';
 import '../photoUpload.dart';
 import '../upload.dart';
 import '../userCreate.dart';
+import '../videoFun.dart';
+import '../widgets/logo.dart';
 
 late final UserDatabase userDatabase;
 late final Auth userAuth;
@@ -65,7 +68,8 @@ class MyListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
+        backgroundColor: Colors.brown,
+        body: Container(
         width: size.width,
         height: size.height,
         color: Colors.white,
@@ -96,7 +100,20 @@ class MyListPage extends StatelessWidget {
             //   child: CircularPhotoUploader(),
             // ),
            // _DatePicker(),
+            Stack(
+              children: [
+                Container(
+                  width: 250,
+                  height: 170,
+                  child: Image.asset(
+                    'images/baby1.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
 
+              ],
+            ),
+            SizedBox(height: 45,),
             Expanded(child: _BottomContainer()),
           ],
         ),
@@ -168,7 +185,7 @@ class _BottomContainer extends StatelessWidget {
         case 'screen2':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const PaintPage()),
+            MaterialPageRoute(builder: (context) =>  YoutubePage()),
           );
           break;
         case 'screen3':
@@ -197,11 +214,10 @@ class _BottomContainer extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           childAspectRatio: 0.9,
           crossAxisCount: 2,
-          mainAxisSpacing: 3,
-          crossAxisSpacing: 17,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 5,
           children: [
-            SizedBox(),
-            SizedBox(),
+
             // ElevatedButton(
             //
             //     onPressed:(){
@@ -230,7 +246,7 @@ class _BottomContainer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
-                        'Find a BabySitter',
+                        'Find',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -238,14 +254,14 @@ class _BottomContainer extends StatelessWidget {
                       ),
                     ),
                     Image.asset(
-                      'images/baby1.png',
+                      'images/find.png',
                       width: 120,
                       fit: BoxFit.fill,
                     ),
                   ],
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.cyan,
+                  color: Colors.pink,
                   borderRadius: BorderRadius.circular(8.0),
                   boxShadow: [
                     BoxShadow(
@@ -260,8 +276,11 @@ class _BottomContainer extends StatelessWidget {
             ),
             GestureDetector(
                 onTap: () {
-                  navigateToScreen(
-                      context, 'screen2'); // Pass the identifier for screen 1
+                  Navigator.push(
+                    context,MaterialPageRoute(builder: (context)=>FunPage())
+                  );
+                  // navigateToScreen(
+                  //     context, 'screen2'); // Pass the identifier for screen 1
                 },
 
                 child: Container(
@@ -270,19 +289,20 @@ class _BottomContainer extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text('Art',
+                          child: Text('Fun',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold)),
                         ),
+                        SizedBox(height:10,),
                         Image.asset(
-                          width: 120,
-                          'images/vector-color-paint.png',
+                          width: 130,
+                          'images/fun.jpg',
                           fit: BoxFit.fill,
                         ),
                       ]),
                   decoration: BoxDecoration(
                     color: Colors
-                        .cyan, // Set the background color of the container
+                        .purpleAccent, // Set the background color of the container
                     borderRadius: BorderRadius.circular(
                         8.0), // Set the border radius of the container
                     boxShadow: [
@@ -320,7 +340,7 @@ class _BottomContainer extends StatelessWidget {
                       ]),
                   decoration: BoxDecoration(
                     color: Colors
-                        .cyan, // Set the background color of the container
+                        .green, // Set the background color of the container
                     borderRadius: BorderRadius.circular(
                         8.0), // Set the border radius of the container
                     boxShadow: [
@@ -357,7 +377,7 @@ class _BottomContainer extends StatelessWidget {
                       ]),
                   decoration: BoxDecoration(
                     color: Colors
-                        .cyan, // Set the background color of the container
+                        .orange, // Set the background color of the container
                     borderRadius: BorderRadius.circular(
                         8.0), // Set the border radius of the container
                     boxShadow: [

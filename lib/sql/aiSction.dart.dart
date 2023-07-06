@@ -130,10 +130,10 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
 
 
   bool isVideoUploaded = false;
-  String streamUrlButton0 = 'http://10.0.0.14:5432/babinski';
-  String streamUrlButton1 = 'http://10.0.0.14:5432/grasp-reflex';
-  String streamUrlButton2 = 'http://10.0.0.14:5432/RootingReflex';
-  String streamUrlButton3 = 'http://10.0.0.14:5432/tonicNeck';
+  String streamUrlButton0 = 'http://16.170.202.231:8080/babinski';
+  String streamUrlButton1 = 'http://16.170.202.231:8080/grasp-reflex';
+  String streamUrlButton2 = 'http://16.170.202.231:8080/RootingReflex';
+  String streamUrlButton3 = 'http://16.170.202.231:8080/tonicNeck';
 
   @override
   Widget build(BuildContext context) {
@@ -143,12 +143,12 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
     final PageController _pageController = PageController();
 
     return Scaffold(
-      backgroundColor: Colors.white, // Set the desired background color here
+      backgroundColor: Colors.white10, // Set the desired background color here
       appBar: showAppBar ? AppBar(title: const Text(
         'Test Page',
         style: TextStyle(
-            fontSize: 25.0,
-            color: Colors.black,
+            fontSize: 20,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
             decoration: TextDecoration.none),
@@ -210,7 +210,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                         ],
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.pink,
                         borderRadius: BorderRadius.circular(8.0),
                         boxShadow: [
                           BoxShadow(
@@ -249,7 +249,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                         ],
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.green,
                         borderRadius: BorderRadius.circular(8.0),
                         boxShadow: [
                           BoxShadow(
@@ -289,7 +289,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                         ],
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.purpleAccent,
                         borderRadius: BorderRadius.circular(8.0),
                         boxShadow: [
                           BoxShadow(
@@ -328,7 +328,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                         ],
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.orange,
                         borderRadius: BorderRadius.circular(8.0),
                         boxShadow: [
                           BoxShadow(
@@ -367,7 +367,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen> {
                         ],
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.yellow,
                         borderRadius: BorderRadius.circular(8.0),
                         boxShadow: [
                           BoxShadow(

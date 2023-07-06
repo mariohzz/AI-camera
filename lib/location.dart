@@ -10,16 +10,32 @@ class LocationSearchScreen extends StatefulWidget {
 class _LocationSearchScreenState extends State<LocationSearchScreen> {
   final TextEditingController _locationController = TextEditingController();
   List<dynamic> _marketResults = [];
+  List<Color> _cardColors = [
+    Colors.blue,
+    Colors.red,
+    Colors.green,
+    Colors.orange,
+    Colors.purple,
+  ];
+  bool _isSearching = false;
 
   Future<void> _searchMarkets() async {
     final String place = _locationController.text;
-    final String url = 'http://10.0.0.14:5000/search'; // Update with your server URL
+    final String url = 'http://16.170.202.231:8181/search'; // Update with your server URL
+
+    setState(() {
+      _isSearching = true;
+    });
 
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'place': place}),
     );
+
+    setState(() {
+      _isSearching = false;
+    });
 
     if (response.statusCode == 200) {
       setState(() {
@@ -43,33 +59,78 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Market Search'),
+        backgroundColor: Colors.cyan,
+        title: Text('Location Search'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _locationController,
-              decoration: InputDecoration(
-                labelText: 'Enter Location',
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: TextField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: 'Enter Location',
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(16.0),
+                ),
               ),
             ),
-            ElevatedButton(
-              onPressed: _searchMarkets,
-              child: Text('Search'),
+            SizedBox(height: 16.0),
+            GestureDetector(
+              onTap: _isSearching ? null : _searchMarkets,
+              child: Container(
+                height: 50.0,
+                decoration: BoxDecoration(
+                  color: _isSearching ? Colors.grey : Colors.blue,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: _isSearching
+                      ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
+                      : Text(
+                    'Search',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ),
+            SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
                 itemCount: _marketResults.length,
                 itemBuilder: (ctx, index) {
                   final market = _marketResults[index];
-                  return ListTile(
-                    title: Text(market['name']),
-                    subtitle: Text(market['address']),
-                    onTap: () {
-                      _selectPlace(market);
-                    },
+                  final cardColor = _cardColors[index % _cardColors.length];
+                  return Card(
+                    color: cardColor,
+                    child: ListTile(
+                      title: Text(
+                        market['name'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        market['address'],
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        _selectPlace(market);
+                      },
+                    ),
                   );
                 },
               ),
@@ -90,27 +151,10 @@ class MarketPlaceDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan,
         title: Text(place['name']),
       ),
-      body:MarketMapScreen(mapUrl: place['map_url'],
-      // body: Column(
-      //   children: [
-
-
-
-
-          // ElevatedButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => MarketStreetViewScreen(streetViewUrl: place['street_view_url']),
-          //       ),
-          //     );
-          //   },
-          //   child: Text('View Street View'),
-          // ),
-      ),
+      body: MarketMapScreen(mapUrl: place['map_url']),
     );
   }
 }
@@ -123,6 +167,7 @@ class MarketMapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.teal,
       body: Center(
         child: Image.network(mapUrl),
       ),

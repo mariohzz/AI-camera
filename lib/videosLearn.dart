@@ -165,7 +165,7 @@ class VideoItem extends StatelessWidget {
                       padding: EdgeInsets.all(4),
                       child: Icon(
                         Icons.check,
-                        color: Colors.white,
+                        color: Colors.cyan,
                         size: 20,
                       ),
                     ),

@@ -335,7 +335,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreenThis> {
       _isVideoSaved = true;
     });
 
-    final url = Uri.parse('http://10.0.0.14:5432/upload');
+    final url = Uri.parse('http://16.170.202.231:8080/upload');
     final request = http.MultipartRequest('POST', url);
     final videoFile = File(videoPath);
 

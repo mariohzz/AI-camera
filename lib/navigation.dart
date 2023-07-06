@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:python_project/paint_app/home_page.dart';
 import 'package:python_project/photoUpload.dart';
 import 'package:python_project/screens/LoginScreen.dart';
 import 'package:python_project/screens/my_list_page.dart';
@@ -9,6 +10,7 @@ import 'package:python_project/settings.dart';
 import 'package:python_project/sql/aiSction.dart.dart';
 import 'package:python_project/upload.dart';
 import 'package:python_project/userCreate.dart';
+import 'package:python_project/videoFun.dart';
 import 'package:python_project/weightresult.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -72,6 +74,7 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
     bool showAppBar = false;
 
     return Scaffold(
+      backgroundColor: Colors.white10,
       appBar: showAppBar ? AppBar(title: Text('Your App Bar Title')) : null,
       body: PageView(
         controller: _pageController,
@@ -84,6 +87,8 @@ class _Material3BottomNavState extends State<Material3BottomNav> {
           // Add other page classes here if desired
           Clinics(widget.userDatabase),
           //ResultsPage(widget.userDatabase,widget.userAuth),
+          //YoutubePage(),
+          //PaintPage(),
           ProfilePage(widget.userDatabase,widget.userAuth),
         ],
       ),
@@ -155,15 +160,26 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        backgroundColor: Colors.cyan,
+        title: Text('Settings'),
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'User: ${userAuth.getCurrentUser()?.email ?? 'Unknown'}',
-              style: TextStyle(fontSize: 20),
+            GestureDetector(
+              onTap: () {
+                // Handle the tap gesture here
+                print('Text tapped!');
+              },
+              child: Text(
+                'User: ${userAuth.getCurrentUser()?.email ?? 'Unknown'}',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black, // Set the text color to blue
+                ),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -171,6 +187,9 @@ class ProfilePage extends StatelessWidget {
                 userAuth.signOut(context,userDatabase,userAuth);
               },
               child: Text('Logout'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Set the button color to red
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -180,6 +199,9 @@ class ProfilePage extends StatelessWidget {
                 );
               },
               child: Text('info update'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green, // Set the button color to green
+              ),
             ),
           ],
         ),
@@ -213,9 +235,9 @@ const _navBarItems = [
     label: 'Clinics',
   ),
   // NavigationDestination(
-  //   icon: Icon(Icons.settings),
+  //   icon: Icon(Icons.gamepad_outlined),
   //   selectedIcon: Icon(Icons.ac_unit_rounded),
-  //   label: 'weight',
+  //   label: 'Draw',
   // ),
   NavigationDestination(
     icon: Icon(Icons.settings),
