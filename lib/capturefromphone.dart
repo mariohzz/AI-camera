@@ -310,6 +310,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreenThis> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   bool _isVideoSaved = false;
+
   bool completed = false;
 
 

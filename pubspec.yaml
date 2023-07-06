@@ -74,7 +74,7 @@ dependencies:
   googleapis: ^3.0.0
   googleapis_auth: ^1.4.1
   introduction_screen:
-    path: C:\Users\bilal\StudioProjects\AI-camera111111111111\introscreen
+    path: ../AI-camera111111111111/introscreen
 
 
 

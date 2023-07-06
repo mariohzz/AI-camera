@@ -31,7 +31,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.initState();
     _downloadAndPlayVideo();
   }
-
+  String? stringData;
   Future<void> _downloadAndPlayVideo() async {
     final Directory appDocDir = await getApplicationDocumentsDirectory();
     final String videoPath = '${appDocDir.path}/video.mp4';
@@ -62,8 +62,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
 
       if (response.statusCode == 200) {
-        String? stringData = response.headers['result'];
-        print(stringData);
+         stringData = response.headers['result'];
+        //print(stringData);
         final File videoFile = File(videoPath);
         widget.userDatabase.saveResult(stringData!,videoFile);
         await videoFile.writeAsBytes(response.bodyBytes);
@@ -134,6 +134,26 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               aspectRatio: _controller.value.aspectRatio,
               child: Chewie(
                 controller: _chewieController,
+              ),
+            ),
+          ),
+          SizedBox(height: 50,),
+          GestureDetector(
+            onTap: () {
+              // Navigate to another page or perform an action
+            },
+            child: Card(
+              color: Colors.blue, // Customize the color as per your design
+              child: Padding(
+                padding: EdgeInsets.all(60.0),
+                child: Text(
+                  stringData ?? '', // Display the stringData variable
+                  style: TextStyle(
+                    color: Colors.white, // Customize the text color as per your design
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),

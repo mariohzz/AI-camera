@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _updatePreferences() async {
-    await _prefs.setBool('showIntro', false);
+    await _prefs.setBool('showIntro', true);
   }
 
   @override
